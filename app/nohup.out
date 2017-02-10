@@ -1,0 +1,64 @@
+3542:M 10 Feb 16:10:16.287 # Creating Server TCP listening socket 0.0.0.0:6379: bind: Address already in use
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] MongoDB starting : pid=3541 port=27017 dbpath=/data/db 64-bit host=flask.com
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] db version v3.2.6
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] git version: 05552b562c7a0b3143a729aaa0838e558dc49b25
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 0.9.8e-fips-rhel5 01 Jul 2008
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] allocator: tcmalloc
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] modules: none
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] build environment:
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten]     distmod: rhel55
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten]     distarch: x86_64
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten]     target_arch: x86_64
+2017-02-10T16:10:16.302+0800 I CONTROL  [initandlisten] options: {}
+2017-02-10T16:10:16.323+0800 E NETWORK  [initandlisten] listen(): bind() failed errno:98 Address already in use for socket: 0.0.0.0:27017
+2017-02-10T16:10:16.323+0800 E NETWORK  [initandlisten]   addr already in use
+2017-02-10T16:10:16.323+0800 E STORAGE  [initandlisten] Failed to set up sockets during startup.
+2017-02-10T16:10:16.323+0800 I CONTROL  [initandlisten] dbexit:  rc: 48
+5990:M 10 Feb 16:12:07.445 # Creating Server TCP listening socket 0.0.0.0:6379: bind: Address already in use
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] MongoDB starting : pid=5989 port=27017 dbpath=/data/db 64-bit host=flask.com
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] db version v3.2.6
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] git version: 05552b562c7a0b3143a729aaa0838e558dc49b25
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 0.9.8e-fips-rhel5 01 Jul 2008
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] allocator: tcmalloc
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] modules: none
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] build environment:
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten]     distmod: rhel55
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten]     distarch: x86_64
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten]     target_arch: x86_64
+2017-02-10T16:12:07.461+0800 I CONTROL  [initandlisten] options: {}
+2017-02-10T16:12:07.482+0800 E NETWORK  [initandlisten] listen(): bind() failed errno:98 Address already in use for socket: 0.0.0.0:27017
+2017-02-10T16:12:07.482+0800 E NETWORK  [initandlisten]   addr already in use
+2017-02-10T16:12:07.482+0800 E STORAGE  [initandlisten] Failed to set up sockets during startup.
+2017-02-10T16:12:07.482+0800 I CONTROL  [initandlisten] dbexit:  rc: 48
+23058:M 10 Feb 16:26:43.462 # Creating Server TCP listening socket 0.0.0.0:6379: bind: Address already in use
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] MongoDB starting : pid=23057 port=27017 dbpath=/data/db 64-bit host=flask.com
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] db version v3.2.6
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] git version: 05552b562c7a0b3143a729aaa0838e558dc49b25
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 0.9.8e-fips-rhel5 01 Jul 2008
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] allocator: tcmalloc
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] modules: none
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] build environment:
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten]     distmod: rhel55
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten]     distarch: x86_64
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten]     target_arch: x86_64
+2017-02-10T16:26:43.477+0800 I CONTROL  [initandlisten] options: {}
+2017-02-10T16:26:43.498+0800 E NETWORK  [initandlisten] listen(): bind() failed errno:98 Address already in use for socket: 0.0.0.0:27017
+2017-02-10T16:26:43.498+0800 E NETWORK  [initandlisten]   addr already in use
+2017-02-10T16:26:43.498+0800 E STORAGE  [initandlisten] Failed to set up sockets during startup.
+2017-02-10T16:26:43.498+0800 I CONTROL  [initandlisten] dbexit:  rc: 48
+25405:M 10 Feb 16:28:20.088 # Creating Server TCP listening socket 0.0.0.0:6379: bind: Address already in use
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] MongoDB starting : pid=25404 port=27017 dbpath=/data/db 64-bit host=flask.com
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] db version v3.2.6
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] git version: 05552b562c7a0b3143a729aaa0838e558dc49b25
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 0.9.8e-fips-rhel5 01 Jul 2008
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] allocator: tcmalloc
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] modules: none
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] build environment:
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten]     distmod: rhel55
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten]     distarch: x86_64
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten]     target_arch: x86_64
+2017-02-10T16:28:20.103+0800 I CONTROL  [initandlisten] options: {}
+2017-02-10T16:28:20.124+0800 E NETWORK  [initandlisten] listen(): bind() failed errno:98 Address already in use for socket: 0.0.0.0:27017
+2017-02-10T16:28:20.124+0800 E NETWORK  [initandlisten]   addr already in use
+2017-02-10T16:28:20.124+0800 E STORAGE  [initandlisten] Failed to set up sockets during startup.
+2017-02-10T16:28:20.124+0800 I CONTROL  [initandlisten] dbexit:  rc: 48

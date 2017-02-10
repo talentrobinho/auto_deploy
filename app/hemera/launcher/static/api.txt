@@ -1,0 +1,6 @@
+/adtech/PC_Search/main/Query/A/ring0	10.139.42.116
+/adtech/PC_Search/main/Query/A/ring0	10.139.42.117
+/adtech/PC_Search/main/Query/A/ring0	10.139.42.118
+/adtech/PC_Search/main/Query/A/ring0	10.139.42.119
+/adtech/PC_Search/main/BiddingServer/S2/ring0	10.139.17.122
+/adtech/PC_Search/main/BiddingServer/S3/ring0	10.139.17.123

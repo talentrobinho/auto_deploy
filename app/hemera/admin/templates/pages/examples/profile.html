@@ -1,0 +1,369 @@
+  {% extends 'index.html' %}
+  {% block ContentWrapper%}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        User Profile
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Examples</a></li>
+        <li class="active">User profile</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <div class="row">
+        <div class="col-md-3">
+
+          <!-- Profile Image -->
+          <div class="box box-primary">
+            <div class="box-body box-profile" id="left_tree">
+              <img class="profile-user-img img-responsive img-circle" src="/static/dist/img/user4-128x128.jpg" alt="User profile picture">
+
+              <h3 class="profile-username text-center">Nina Mcintire</h3>
+
+              <p class="text-muted text-center">Software Engineer</p>
+
+              <ul class="list-group list-group-unbordered easyui-tree" id="leftbar">
+                <!--
+                <li class="list-group-item">
+                  <b>Followers</b> <a class="pull-right">1,322</a>
+                </li>
+                -->
+              </ul>
+
+              <a href="#" class="btn btn-primary btn-block"><b>online</b></a>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+          <!-- About Me Box -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">About Me</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+
+              <p class="text-muted">
+                B.S. in Computer Science from the University of Tennessee at Knoxville
+              </p>
+
+              <hr>
+
+              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+
+              <p class="text-muted">Malibu, California</p>
+
+              <hr>
+
+              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
+
+              <p>
+                <span class="label label-danger">UI Design</span>
+                <span class="label label-success">Coding</span>
+                <span class="label label-info">Javascript</span>
+                <span class="label label-warning">PHP</span>
+                <span class="label label-primary">Node.js</span>
+              </p>
+
+              <hr>
+
+              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
+
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+
+        <div class="col-md-9">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#online" data-toggle="tab">Online</a></li>
+              <li><a href="#timeline" data-toggle="tab">Backup</a></li>
+              <li><a href="#settings" data-toggle="tab">RollBack</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="active tab-pane" id="online">
+
+        <!-- ######################################################### -->
+            <form role="form">
+
+                    <!-- radio -->
+                    <div class="form-group">
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                          Option one is this and that&mdash;be sure to include why it's great
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                          Option two can be something else and selecting it will deselect option one
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- checkbox -->
+                    <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 1
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 2
+                        </label>
+                      </div>
+                    </div>
+
+
+
+                <div class="form-group" id='aaa' style="display: none">
+                    <label>Route</label>
+                    <select class="form-control select2" multiple="multiple" data-placeholder="Select a State" style="width: 50%">
+                      <option>Alabama</option>
+                      <option>Alaska</option>
+                      <option>California</option>
+                      <option>Delaware</option>
+                      <option>Tennessee</option>
+                      <option>Texas</option>
+                      <option>Washington</option>
+                    </select>
+                </div>
+                <div class="form-group" id='bbb'>
+                    <label>Route</label>
+                  <select class="form-control" style="max-width: 50%">
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id='ccc'>
+                  <label>Ring</label>
+                  <select class="form-control" style="max-width: 50%">
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">BIN File Path</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">BIN File MD5</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">CONF File Path</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">CONF File List</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Build</button>
+                <button type="submit" class="btn btn-primary">Deploy</button>
+              </div>
+            </form>
+        <!-- ######################################################### -->
+              </div>
+              <!-- /.tab-pane -->
+
+
+
+              <div class="tab-pane" id="timeline">
+        <!-- ######################################################### -->
+                <form role="form">
+               
+                    <!-- checkbox -->
+                    <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 1
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 2
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 2
+                        </label>
+                      </div>
+                     </div>
+
+                <div class="box-footer">
+                      <button type="submit" class="btn btn-primary">Backup</button>
+                    </div>
+                </form>
+        <!-- ######################################################### -->
+              </div>
+              <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="settings">
+        <!-- ######################################################### -->
+                <form role="form">
+               
+                    <!-- checkbox -->
+                    <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 1
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 2
+                        </label>
+                      </div>
+ 
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Checkbox 2
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="box-footer">
+                      <button type="submit" class="btn btn-primary">RollBack</button>
+                    </div>
+                </form>
+        <!-- ######################################################### -->
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+ 
+        <div class="col-md-9">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#opLog" data-toggle="tab">Operation Log</a></li>
+              <li><a href="#timelineLog" data-toggle="tab">TimeLine Log</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="active tab-pane" id="opLog">
+                <b>How to use:</b>
+
+                <p>Exactly like the original bootstrap tabs except you should use
+                  the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
+                A wonderful serenity has taken possession of my entire soul,
+                like these sweet mornings of spring which I enjoy with my whole heart.
+                I am alone, and feel the charm of existence in this spot,
+                which was created for the bliss of souls like mine. I am so happy,
+                my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
+                that I neglect my talents. I should be incapable of drawing a single stroke
+                at the present moment; and yet I feel that I never was a greater artist than now.
+              </div>
+              <!-- /.tab-pane -->
+
+
+              <div class="tab-pane" id="timelineLog">
+                <!-- The timeline -->
+                <ul class="timeline timeline-inverse">
+                  <!-- timeline time label -->
+                  <li class="time-label">
+                        <span class="bg-red">
+                          10 Feb. 2014
+                        </span>
+                  </li>
+                  <!-- /.timeline-label -->
+                  <!-- timeline item -->
+                  <li>
+                    <i class="fa fa-user bg-aqua"></i>
+
+                    <div class="timeline-item">
+                      <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+
+                      <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                      </h3>
+                    </div>
+                  </li>
+                  <!-- END timeline item -->
+                  <!-- timeline item -->
+                  <li>
+                    <i class="fa fa-user bg-aqua"></i>
+
+                    <div class="timeline-item">
+                      <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+
+                      <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                      </h3>
+                    </div>
+                  </li>
+                  <!-- END timeline item -->
+                  <!-- timeline item -->
+                  <li>
+                    <i class="fa fa-user bg-aqua"></i>
+
+                    <div class="timeline-item">
+                      <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+
+                      <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                      </h3>
+                    </div>
+                  </li>
+                  <!-- END timeline item -->
+                  <li>
+                    <i class="fa fa-clock-o bg-gray"></i>
+                  </li>
+                </ul>
+              </div>
+              <!-- /.tab-pane -->
+
+
+
+
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+
+     </div>
+      <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+  {% endblock %}

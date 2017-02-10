@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <br />
+                </div>
+                <div class="col-md-12">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Module</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                                <th>Info</th>
+                            </tr>
+                        </thead>
+                        {% for item in list %}
+                            <tbody>
+                                <tr>
+                                    <!--td>{{ loop.index }}</td-->
+                                    <td>{{ item['Name'] }}</td>
+                                    <td>duyichen</td>
+                                    <td>{{ item.Status }}</td>
+                                    <td>{{ item.Time | timeformat }}</td>
+                                    <td>{{ item.BuildNo }}</td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

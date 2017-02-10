@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Paltform{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/launcher/static/jquery-easyui-1.5/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="/launcher/static/jquery-easyui-1.5/themes/icon.css">
+<script type="text/javascript" src="/launcher/static/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+   $('#nodes').tree({
+       animate:true,
+       lines:true,
+       dnd:true,
+       url:"{{ url_for('lau.tree_node') }}"
+   });
+});
+
+$(document).ready(function(){
+    $("#nodes").click(function(){
+        var node = $('#nodes').tree('getSelected');
+        var tr = node.text;
+        var root = $('#nodes').tree('getParent', node.target);
+        while(root)
+        {   
+            tr = root.text + '_' + tr;
+            node = root;
+            root = $('#nodes').tree('getParent', node.target);
+        }
+        $.ajax({ 
+            type: "GET",
+            url: "{{ url_for('lau.get_node', text='') }}"+tr,
+            success: function(data){ 
+                $('#text').html(data['module_text']);
+            }
+        });
+    });
+});
+
+function appendnodes(){
+    var node = $('#nodes').tree('getSelected');
+    if (node){
+        var nodes = [
+        {
+            text:"rename"
+        }];
+        $('#nodes').tree('append', {parent:node.target,data:nodes});
+    }
+    else
+        alert("Please select the parent node.")
+}
+
+function displayBackup(){
+    var node = $('#nodes').tree('getSelected');
+    if (node){
+        //$('#display').html('backuphtml');
+        load_backup();
+    }
+}
+function load_backup(){
+    src="{{ url_for('lau.backup') }}"
+    $("#display").load(src);
+}
+
+function displayDeploy(){
+    var node = $('#nodes').tree('getSelected');
+    if (node){
+        load_deploy();
+    }
+}
+function load_deploy(){
+    src="{{ url_for('lau.deploy') }}"
+    $("#display").load(src);
+}
+
+function displayRollback(){
+    var node = $('#nodes').tree('getSelected');
+    if (node){
+        load_rollback();
+    }
+}
+function load_rollback(){
+    src="{{ url_for('lau.rollback') }}"
+    $("#display").load(src);
+}
+
+function displayLog(){
+    var node = $('#nodes').tree('getSelected');
+    if (node){
+        load_log();
+    }
+}
+function load_log(){
+    src="{{ url_for('lau.log') }}"
+    $("#display").load(src);
+}
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-3 sidebar">
+            <h3><span class="glyphicon glyphicon-tree-deciduous"></span>MODULES</h3>
+            <ul id="nodes"></ul>
+            <a href="#" onclick="appendnodes()"><button id="add">add</button></a>
+            <a href="#" onclick="deletenodes()"><button id="del">del</button></a>
+            <div id="text"></div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main">
+            <div class="col-md-12">
+                <ul class="nav nav-pills" role="tablist">
+                    <li role="presentation"><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+                    <li role="presentation"><a href="#" onclick="displayBackup()">Backup</a></li>
+                    <li role="presentation"><a href="#" onclick="displayDeploy()">Deploy</a></li>
+                    <li role="presentation"><a href="#" onclick="displayRollback()">Rollback</a></li>
+                    <li role="presentation"><a href="#" onclick="displayLog()">Log</a></li>
+                </ul>
+            </div>
+            <div class="col-md-12">
+                <div id="display"></div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

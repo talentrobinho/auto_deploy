@@ -1,0 +1,20 @@
+<style type="text/css">
+    ul.imageStyle{
+        list-style-image: url('/launcher/static/img/16x16/computer.png')
+    }
+</style>
+
+<div role="tabpanel" class="tab-pane fade in active" id="A" aria-labelledBy="A-tab">
+    <ul class="imageStyle">
+        {% for ip in ip_list %}
+            <li>{{ ip }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div role="tabpanel" class="tab-pane fade" id="B" aria-labelledBy="B-tab">
+    <ul>
+        {% for ip in ip_list %}
+            <li>{{ ip }}</li>
+        {% endfor %}
+    </ul>
+</div>

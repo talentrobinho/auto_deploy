@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <form action="{{ url_for('lau.exe_cmd') }}" method=post>
+            <dl>
+                <dt>tgt:
+                    <dd><input type=text size=30 name=tgt>
+                <dt>cmd:
+                    <dd><input type=text size=30 name=cmd>
+                <dt>arg:
+                    <dd><input type=text size=30 name=arg>
+                <dt>expr_form:
+                    <dd><input type=text size=30 name=expr_form>
+                    <dd><input type=submit value=execute>
+            </dl>
+        </form>
+    </body>
+</html>

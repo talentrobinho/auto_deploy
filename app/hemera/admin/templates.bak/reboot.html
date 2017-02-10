@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.ajax({ 
+            type: "GET", 
+            url: "{{ url_for('syscmd',cmd='ls') }}", 
+            success: function(data){ 
+                alert(data); 
+            } 
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block page_content %}
+    <p>Reboot System<p>
+    <button type="button">reboot</button>
+    <div>
+        <p id="img">display img</p>
+    </div>
+{% endblock %}

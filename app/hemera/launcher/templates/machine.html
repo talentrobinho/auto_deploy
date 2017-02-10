@@ -1,0 +1,55 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+            $('#machines').tree({
+                //animate:true,
+                //lines:true,
+                //dnd:true,
+                //url: "{{ url_for('lau.tree_node') }}"
+                data:[]
+            });
+        });
+
+
+    $('#myTab a').click(function(e){
+            e.preventDefault();
+            $(this).tab('show');
+    });
+
+    $('#B-tab').click(function(e){
+            var route = $('#B-tab').text();
+            $.ajax({
+                type: "GET",
+                url: "{{ url_for('lau.display_ip', text='') }}"+route,
+                success: function(data){ 
+                    $('#myTabContent').html(data);
+                }
+            });
+    })
+    $('#A-tab').click(function(e){
+            var route = $('#A-tab').text();
+            $.ajax({
+                type: "GET",
+                url: "{{ url_for('lau.display_ip', text='') }}"+route,
+                success: function(data){ 
+                    $('#myTabContent').html(data);
+                }
+            });
+    })
+
+</script>
+
+<div class="bs-example bs-example-tabs">
+    <ul id="myTab" class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="#A" id="A-tab" role="tab" data-toggle="tab" aria-controls="A" aria-expanded="true">A</a></li>
+        <li role="presentation"><a href="#B" role="tab" id="B-tab" data-toggle="tab" aria-controls="B">B</a></li>
+    </ul>
+    <br /> 
+
+    <div id="myTabContent" class="tab-content">
+    </div>
+</div><!-- /example -->
+
+<ul id="machines"></ul>
+
+<div id='ip'></div>
+

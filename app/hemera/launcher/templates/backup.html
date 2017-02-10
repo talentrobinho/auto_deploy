@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <script>
+            $(document).ready(function(){
+                backup_eventsource();
+            });
+
+            $("#backup-OK").click(function(){
+                $('#backupModal').modal('hide');
+                $.ajax({ 
+                    type: "GET",
+                    url: "{{ url_for('lau.backup_output') }}",
+                    success: function(data){
+                //        $('#backupModal').modal('hide');
+                        alert(data['result']);
+                //          $('#messages').append(data['result']);
+                //        //load_database()
+                //        //$("#backup").attr("disabled",false)
+                //        //$("#launch").attr("disabled",false)
+                    }
+                });
+            });
+
+            $(function(){
+                $('#backupModal').modal({
+                    keyboard: false,
+                    backdrop: false,
+                    show: false
+                })
+            });
+
+            function backup_eventsource(){
+                var source = new EventSource("{{ url_for('sse.stream', channel='backup') }}");
+                source.addEventListener('backup_output', function(event) {
+                    var data = JSON.parse(event.data);
+                    $('#backup_output').append(data.message);
+                }, false);
+                source.addEventListener('error', function(event) {
+                    alert("Failed backup");
+                }, false);
+            }
+
+        </script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <br />
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="col-md-12" style="width:100%;height:400px;">
+                            <h4>Backup Class</h4>
+                            <div style="border-bottom:1px solid #ddd"></div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value=""> bin
+                                </label>
+                                <br />
+                                <label>
+                                    <input type="checkbox" value=""> conf
+                                </label>
+                                <br />
+                                <label>
+                                    <input type="checkbox" value=""> data
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-12" style="width:100%;height:400px;">
+                            <h4>Console Output</h4>
+                            <div id="output" style="border-bottom:1px solid #ddd"></div>
+                            <div id="backup_output"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                        <div class="btn-group">
+                            <button id="backup" type="button" class="btn btn-warning" data-toggle="modal" data-target="#backupModal">backup</button>
+                        </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="modal fade" id="backupModal" tabindex="-1" role="dialog" aria-labelledby="backupModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                                    </button>
+                                    <h4 class="modal-title">backup job</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>You will backup the job&hellip;</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="backup-Cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button id="backup-OK" type="button" class="btn btn-primary">OK</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

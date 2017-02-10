@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}System commander{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.ajax({ 
+            type: "GET", 
+            url: "{{ url_for('syscmd',cmd='ls') }}", 
+            success: function(data){ 
+                $('#img').load(data);
+            } 
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block page_content %}
+    <p>System cmd<p>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.cmd.label }} {{ form.cmd() }}
+        {{ form.submit() }}
+    </form>
+    <button type="button">Go</button>
+    <div>
+        <h1 id="img">{{ form.cmd.data }}</h1>
+    </div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+$(document).ready(function(){
+        $("button").click(function(){
+            $("#img").load("{{ url_for('static',filename='a.txt') }}");
+            });
+        });
+</script>
+{% endblock %}
+
+{% block page_content %}
+    <p>Reboot System<p>
+    <button type="button">reboot</button>
+    <div>
+        <p id="img">display img</p>
+    </div>
+{% endblock %}
+
+$.get("{{ url_for('static',filename='a.txt') }}",function(data,status){alert("Data: " + data + "\nStatus: " + status);});

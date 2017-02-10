@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Paltform{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/launcher/static/jquery-easyui-1.5/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="/launcher/static/jquery-easyui-1.5/themes/icon.css">
+<script type="text/javascript" src="/launcher/static/jquery-easyui-1.5/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+
+var deploy_is_click = false;
+
+$(document).ready(function(){
+   $('#nodes').tree({
+       animate:true,
+       lines:true,
+       dnd:true,
+       url:"{{ url_for('lau.tree_node') }}"
+//       data:[
+//       {
+//           text:"Adtech",
+//           state:"open",
+//           iconCls:"icon-save",
+//           children:[
+//           {
+//               text:"PC-search"
+//           },
+//           {
+//               text:"PC-union"
+//           },
+//           {
+//               text:"MB-search"
+//           },
+//           {
+//               text:"MB-union",
+//               state:"close",
+//               iconCls:"icon-save",
+//               children:[
+//               {
+//                   text:"was"
+//               },
+//               {
+//                   text:"wbs_star"
+//               },
+//               {
+//                   text:"wbs_sun"
+//               }]
+//           }]
+//       }]
+   });
+});
+
+
+$(document).ready(function(){
+    $("#nodes").click(function(){
+        var node = $('#nodes').tree('getSelected');
+        var tr = node.text;
+        var root = $('#nodes').tree('getParent', node.target);
+        while(root)
+        {   
+            tr = root.text + '_' + tr;
+            node = root;
+            root = $('#nodes').tree('getParent', node.target);
+        }
+        $.ajax({ 
+            type: "GET",
+            url: "{{ url_for('lau.get_node', text='') }}"+tr,
+            success: function(data){ 
+                $('#text').html(data['module_text'])
+            }
+        });
+
+        if(deploy_is_click)
+        {
+            load();
+        }
+    });
+});
+
+
+function appendnodes(){
+    var node = $('#nodes').tree('getSelected');
+    if (node){
+        var nodes = [
+        {
+            text:"rename"
+        }];
+        $('#nodes').tree('append', {parent:node.target,data:nodes});
+    }
+    else
+        alert("Please select the parent node.")
+}
+
+
+function displayDeploy(){
+    deploy_is_click = true;
+    var node = $('#nodes').tree('getSelected');
+    //var deployhtml = '<iframe src="{{ url_for('lau.deploy') }}" frameborder="0" scrolling="no" width="100%" height="100%"></iframe>'
+    if (node){
+        load()
+        //$('#display').html(deployhtml);
+    }
+}
+
+function displayRollback(){
+    //var rollbackhtml = '<iframe></iframe>'
+    var node = $('#nodes').tree('getSelected');
+    if (node){
+        $('#display').html('rollbackhtml');
+    }
+}
+
+function load(){
+    src="{{ url_for('lau.deploy') }}"
+    $("#display").load(src);
+}
+
+</script>
+{% endblock %}
+
+{% block page_content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <h3><span class="glyphicon glyphicon-tree-deciduous"></span>modules</h3>
+            <ul id="nodes"></ul>
+            <a href="#" onclick="appendnodes()"><button id="add">add</button></a>
+            <a href="#" onclick="deletenodes()"><button id="del">del</button></a>
+            <div id="text"></div>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills" role="tablist">
+                        <li role="presentation"><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+                        <li role="presentation"><a href="#" onclick="displayDeploy()">Deploy</a></li>
+                        <li role="presentation"><a href="#" onclick="displayRollback()">Rollback</a></li>
+                        <li role="presentation"><a href="#">Messages</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    <div id="display"></div>
+                    <!--iframe src="{{ url_for('lau.deploy') }}" width="auto" height="auto" frameborder="0"></iframe-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!--$.get("{{ url_for('static',filename='a.txt') }}",function(data,status){alert("Data: " + data + "\nStatus: " + status);});-->

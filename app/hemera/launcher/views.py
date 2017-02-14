@@ -8,19 +8,42 @@ from flask import Blueprint, render_template, session
 from flask import jsonify, abort, make_response, request
 from .util import *
 from .. import app
+'''
+    lizhansheng add
+'''
+from .cgi.make_server_info import *
+from flask.ext.cache import Cache
+'''
+    lizhansheng add end
+'''
 
-from flask_sse import sse
+
+
+
+#from flask_sse import sse
 
 lau = Blueprint('lau', __name__, template_folder='templates', static_folder='static')
 japi = Serjenkins(app)
-sapi = SersaltAPI(app)
-db = Mongodb(app)
+#sapi = SersaltAPI(app)
+#db = Mongodb(app)
 
+'''
+    lizhansheng 
+'''
 
-@lau.route('/', methods=['GET'])
-def index_route():
+@lau.route('/online/index', methods=['GET'])
+def index_online():
     """ Ö÷Ò³Ãæ """
-    return render_template('base.html')
+    return render_template('online/index.html')
+
+@lau.route('/admini/index', methods=['GET'])
+def admini_index():
+    """ Ö÷Ò³Ãæ """
+    return render_template('admini/index.html')
+
+'''
+    lizhansheng  end
+'''
 
 @lau.route('/backup/back', methods=['GET'])
 def backup_back():
@@ -40,7 +63,7 @@ def backup_back():
         result = yaml.load(r.text)['return']
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
-            sse.publish(data, type='backup_output', channel='backup')    # Ö´ÐÐÐÅÏ¢Êä³ö
+            #sse.publish(data, type='backup_output', channel='backup')    # Ö´ÐÐÐÅÏ¢Êä³ö
         rv = 'backup ok'
     return jsonify({'result':rv})
 
@@ -111,7 +134,7 @@ def rollback_roll():
         result = yaml.load(r.text)['return']
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
-            sse.publish(data, type='rollback_output', channel='rollback')
+            #sse.publish(data, type='rollback_output', channel='rollback')
         rv = 'rollback ok'
     return jsonify({'result':rv})
 
@@ -248,3 +271,79 @@ def ip():
             "10.134.108.152"
          ]
     return render_template('ip.html', ip_list=ip)
+
+
+
+'''
+    ##########################################################################
+                            lizhansheng add
+    ##########################################################################
+'''
+
+'''
+    redis
+'''
+cache = Cache()
+config = {
+  'CACHE_TYPE': app.config['CACHE_TYPE'],
+  'CACHE_REDIS_HOST': app.config['CACHE_REDIS_HOST'],
+  'CACHE_REDIS_PORT': app.config['CACHE_REDIS_PORT'],
+  'CACHE_REDIS_DB': app.config['CACHE_REDIS_DB'],
+  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
+}
+
+#@csrf_exempt
+@lau.route('/tree/getsidebar', methods=['GET'])
+def sidebar_content():
+    root=[]
+    tmp_root=[]
+    fa=[]
+    tmp={}
+    deal_list=[]
+    sidebar_list=get_service_info()
+    ##print type(sidebar_list)
+    for line in sidebar_list:
+        if line:
+            line_tmp = line.strip('/').split('/')
+            line_list = line_tmp[:-2]
+            if line_list in deal_list:
+                continue
+            deal_list.append(line_list)
+            tmp_root = Make_Tree_Json(tmp_root, line_list)
+    ##return HttpResponse(json.dumps(tmp_root), content_type='application/json')
+    return jsonify(tmp_root)
+
+################################################################
+###         make select of route and ring json data          ###
+################################################################
+@lau.route('/tree/getrr', methods=['GET'])
+def rr_list():
+    service_info=get_service_info()
+    rr_info = route_map_ring(service_info)
+    #return HttpResponse(json.dumps(rr_info), content_type='application/json')
+    return jsonify(rr_info)
+
+@lau.route('/api/getip', methods=['GET'])
+def get_ip():
+    """
+        Explain:
+            ¿¿request.POST['server']¿¿¿ IP ¿¿
+        Render:
+            ¿¿ IP ¿JSON ¿¿
+            {'ip': '1.1.1.1 2.2.2.2'}
+    """
+    tmp_dict = {}
+    if request.method == "GET":
+        #server = request.GET['server']
+        server = request.args.get('server')
+    #print server
+    #tmp_dict['ip'] = get_service_ip(server)
+    #print tmp_dict
+    #return HttpResponse(json.dumps(get_service_ip(server)), content_type='application/json')
+    return jsonify(get_service_ip(server))
+
+'''
+    ##########################################################################
+                            lizhansheng add end
+    ##########################################################################
+'''

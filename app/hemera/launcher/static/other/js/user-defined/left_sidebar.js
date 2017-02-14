@@ -240,11 +240,13 @@ function check_form(is_online="false")
             alert("route 不能为空")
             return false
         }
-        form_content['server'] = tree+"_"+routelist
+        //form_content['server'] = tree+"_"+routelist
+        form_content['module_path'] = tree+"_"+routelist
     }
     else
     {
-        form_content['server'] = tree
+        //form_content['server'] = tree
+        form_content['module_path'] = tree
     }
 
 

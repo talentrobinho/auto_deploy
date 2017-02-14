@@ -1,0 +1,399 @@
+  {% extends 'index.html' %}
+
+
+  {% block UserCSS %}
+   <!-- EasyUI CSS load -->
+   <link href="/launcher/static/other/jquery_easyui_1_5/themes/bootstrap/easyui.css" rel="stylesheet" class="skins" type="text/css" />
+
+    <style type="text/css">
+    ul {
+          /*  list-style-image:url(images/bg03.gif); */
+            list-style: none;
+       }
+    </style>
+  {% endblock %}
+
+
+  {% block Dashboard_li %}
+    <li class="active treeview">
+  {% endblock %}
+  {% block Dashboard_OnlineSYS_li %}
+    <li class="active"><a href="/launcher/online/index"><i class="fa fa-circle-o"></i>OnlineSYS</a></li>
+  {% endblock %}
+
+
+  {% block ContentWrapper%}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Online SYS
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Examples</a></li>
+        <li class="active">User profile</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <div class="row">
+        <div class="col-md-3">
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile" id="left_tree" style="max-height: 600px; overflow: auto">
+                    <ul class="list-group list-group-unbordered easyui-tree" id="leftbar">
+                    </ul>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <a href="#" class="btn btn-primary btn-block"><b>online</b></a>
+                </div>    
+                <!-- /.box-footer -->
+            </div>
+            <!-- /.box-primary -->
+        </div>
+        <!-- /.col -->
+
+
+
+        <!--<div class="col-md-9">-->
+        <div class="col-md-5">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#online" data-toggle="tab">Online</a></li>
+              <li><a href="#timeline" data-toggle="tab">Backup</a></li>
+              <li><a href="#settings" data-toggle="tab">RollBack</a></li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  Log <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#RealTimeModal">Real time log</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#TimeLineModal">Time line Log</a></li>
+                </ul>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="active tab-pane" id="online">
+
+        <!-- ######################################################### -->
+            <form role="form">
+
+                    <!-- radio -->
+                    <!--
+                    <div class="form-group">
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                          Option one is this and that&mdash;be sure to include why it's great
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label>
+                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                          Option two can be something else and selecting it will deselect option one
+                        </label>
+                      </div>
+                    </div>
+                    -->
+
+                    <!-- checkbox -->
+                    <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" id="bin">
+                          Bin File
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" id="conf">
+                          Configure File
+                        </label>
+                      </div>
+  
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" id="data">
+                          Data File
+                        </label>
+                      </div>
+                  </div>
+
+                <div class="form-group" id='bbb'>
+                    <label>Route</label>
+                  <select class="form-control" style="max-width: 100%" id="route">
+                  </select>
+                </div>
+
+
+
+                <!-- 不需要环下拉列表、bin、conf文件的输入框 -->
+                <!--
+                <div class="form-group" id='aaa'>
+                    <label>Route</label>
+                    <select class="form-control select2" multiple="multiple" data-placeholder="Select a State" style="width: 100%" id="route">
+                    </select>
+                </div>
+                <div class="form-group" id='bbb' style="display: none">
+                    <label>Route</label>
+                  <select class="form-control" style="max-width: 50%">
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id='ccc' style="display: none">
+                  <label>Ring</label>
+                  <select class="form-control" style="max-width: 50%">
+                    <option>option 1</option>
+                    <option>option 2</option>
+                    <option>option 3</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">BIN File Path</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">BIN File MD5</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">CONF File Path</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                <div class="form-group" style="display: none">
+                  <label for="exampleInputEmail1">CONF File List</label>
+                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+                -->
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary" id="build_button" onclick="build()">Build</button>
+                <button type="submit" class="btn btn-primary" onclick="deploy()">Deploy</button>
+              </div>
+            </form>
+        <!-- ######################################################### -->
+              </div>
+              <!-- /.tab-pane -->
+
+
+
+              <div class="tab-pane" id="timeline">
+        <!-- ######################################################### -->
+                <form role="form">
+               
+                    <!-- checkbox -->
+                    <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Bin File
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Configure File
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Data File
+                        </label>
+                      </div>
+                     </div>
+
+                <div class="box-footer">
+                      <button type="submit" class="btn btn-primary">Backup</button>
+                    </div>
+                </form>
+        <!-- ######################################################### -->
+              </div>
+              <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="settings">
+        <!-- ######################################################### -->
+                <form role="form">
+               
+                    <!-- checkbox -->
+                    <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Bin File
+                        </label>
+                      </div>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Configure File
+                        </label>
+                      </div>
+ 
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox">
+                          Data File
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="box-footer">
+                      <button type="submit" class="btn btn-primary">RollBack</button>
+                    </div>
+                </form>
+        <!-- ######################################################### -->
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+ 
+          <!-- About Me Box -->
+        <div class="col-md-4">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title"><i class="fa fa-server margin-r-5"></i>Server IP List  <small id="machine"></small></h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding" style="font-size:10px;max-height:600px; overflow:auto;">
+                    <!--
+              <table class="table table-condensed" id="IpListTable">
+                    -->
+              <table class="table table-hover" id="IpListTable">
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+
+
+
+
+        <!-- ############################# 日志模态框 ###################################### -->
+          <div class="modal" id="RealTimeModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">Default Modal</h4>
+                </div>
+                <div class="modal-body">
+                    <b>How to use:</b>
+
+                    <p>Exactly like the original bootstrap tabs except you should use
+                      the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
+                    A wonderful serenity has taken possession of my entire soul,
+                    like these sweet mornings of spring which I enjoy with my whole heart.
+                    I am alone, and feel the charm of existence in this spot,
+                    which was created for the bliss of souls like mine. I am so happy,
+                    my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
+                    that I neglect my talents. I should be incapable of drawing a single stroke
+                    at the present moment; and yet I feel that I never was a greater artist than now.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
+
+          <div class="modal" id="TimeLineModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">Default Modal</h4>
+                </div>
+                <div class="modal-body">
+                <!-- The timeline -->
+                <ul class="timeline timeline-inverse">
+
+
+                  <!-- timeline time label -->
+                  <li class="time-label">
+                        <span class="bg-red">
+                          10 Feb. 2014
+                        </span>
+                  </li>
+                  <!-- /.timeline-label -->
+                  <!-- timeline item -->
+                  <li>
+                    <i class="fa fa-user bg-aqua"></i>
+
+                    <div class="timeline-item">
+                      <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+
+                      <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                      </h3>
+                    </div>
+                  </li>
+                  <!-- END timeline item -->
+
+
+                  <li>
+                    <i class="fa fa-clock-o bg-gray"></i>
+                  </li>
+                </ul>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
+
+
+        <!-- ############################# 日志模态框END ###################################### -->
+
+
+
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+
+     </div>
+      <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+  {% endblock %}
+
+
+  {% block UserJS %}
+  <!-- User defind load js-->
+  <script src="/launcher/static/other/js/user-defined/left_sidebar.js"></script>
+  {% endblock %}

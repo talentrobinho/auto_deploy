@@ -12,7 +12,7 @@ from .. import app
     lizhansheng add
 '''
 from .cgi.make_server_info import *
-from flask.ext.cache import Cache
+#from flask.ext.cache import Cache
 '''
     lizhansheng add end
 '''
@@ -283,14 +283,14 @@ def ip():
 '''
     redis
 '''
-cache = Cache()
-config = {
-  'CACHE_TYPE': app.config['CACHE_TYPE'],
-  'CACHE_REDIS_HOST': app.config['CACHE_REDIS_HOST'],
-  'CACHE_REDIS_PORT': app.config['CACHE_REDIS_PORT'],
-  'CACHE_REDIS_DB': app.config['CACHE_REDIS_DB'],
-  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
-}
+#cache = Cache()
+#config = {
+#  'CACHE_TYPE': app.config['CACHE_TYPE'],
+#  'CACHE_REDIS_HOST': app.config['CACHE_REDIS_HOST'],
+#  'CACHE_REDIS_PORT': app.config['CACHE_REDIS_PORT'],
+#  'CACHE_REDIS_DB': app.config['CACHE_REDIS_DB'],
+#  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
+#}
 
 #@csrf_exempt
 @lau.route('/tree/getsidebar', methods=['GET'])

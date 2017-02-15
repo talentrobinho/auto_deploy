@@ -51,7 +51,7 @@ function create_route_select(obj)
 
 
 /*********************************************************************************************************************
-                                             从凯撒接口获取IP函数 
+*                                             从凯撒接口获取IP函数 
 *********************************************************************************************************************/
 function get_ip(server)
 {
@@ -216,7 +216,7 @@ $(document).ready(function(){
         });
 });
 /*********************************************************************************************************************
-                                               检查表单函数 
+*                                               检查表单函数 
 *********************************************************************************************************************/
 function check_form(is_online="false")
 {
@@ -231,15 +231,15 @@ function check_form(is_online="false")
     //form_content['server'] = tree
 
     //检查、获取路选择值
+    var routelist = new Array()
+    routelist = $('#route option:selected').val()
+    if(routelist.length == 0)
+    {
+        alert("route 不能为空")
+        return false
+    }
     if(is_online == "true")
     {
-        var routelist = new Array()
-        routelist = $('#route option:selected').val()
-        if(routelist.length == 0)
-        {
-            alert("route 不能为空")
-            return false
-        }
         //form_content['server'] = tree+"_"+routelist
         form_content['module_path'] = tree+"_"+routelist
     }
@@ -247,6 +247,7 @@ function check_form(is_online="false")
     {
         //form_content['server'] = tree
         form_content['module_path'] = tree
+        form_content['module_route'] = routelist
     }
 
 
@@ -288,7 +289,7 @@ function check_form(is_online="false")
 }
     
 /*********************************************************************************************************************
-                                               获取页面信息函数 
+*                                               获取页面信息函数 
 *********************************************************************************************************************/
 function get_page_info(is_online="false")
 {
@@ -309,7 +310,7 @@ function get_page_info(is_online="false")
 }
   
 /*********************************************************************************************************************
-                                               构建函数 
+*                                               构建函数 
 *********************************************************************************************************************/
 function build()
 {
@@ -319,40 +320,44 @@ function build()
         alert(json_data[0]['status'])
         },
         "json");
-    // show_build_modal('false')
+    show_build_modal('false')
 
-    // // 将js对象转换为json格式的字符串
-    // var build_value = JSON.stringify(page_info)
-    // $("#build_button").attr("value", build_value)
+    // 将js对象转换为json格式的字符串
+    var build_value = JSON.stringify(form_info)
+    $("#build_button").attr("value", build_value)
     
 }
  
 /*********************************************************************************************************************
-                                               发布函数 
+*                                               发布函数 
 *********************************************************************************************************************/
 function deploy()
 {
-    var page_info = get_page_info(is_online="true")
+    //var page_info = get_page_info(is_online="true")
     var build_val = $("#build_button").val()
+    var form_info = check_form(is_online="true")
     // 将json格式的字符串转换为js对象
     var build_info = JSON.parse(build_val)
     for(var key in build_info)
     {
-        if(build_info[key] != page_info[key])
+        alert(build_info[key])
+        alert(form_info[key])
+        //if(build_info[key] != page_info[key])
+        if(build_info[key] != form_info[key])
         {
-            alert("构建与上线信息不符, 差异如下：\n构建的"+key+"为: "+build_info[key]+"\n发布的"+key+"为: "+page_info[key])
+            alert("构建与上线信息不符, 差异如下：\n构建的"+key+"为: "+build_info[key]+"\n发布的"+key+"为: "+form_info[key])
         }
     }
-    //$.post("/deploy/", form_info, function(json_data){
-    //            alert(json_data[0]['status'])
-    //    },
-    //    "json");
+    $.post("/deploy/launch", form_info, function(json_data){
+                alert(json_data[0]['status'])
+        },
+        "json");
     //show_deploy_modal('false')
 }
 
 
 /*********************************************************************************************************************
-                                               备份函数 
+*                                               备份函数 
 *********************************************************************************************************************/
 function backup()
 {
@@ -361,8 +366,9 @@ function backup()
     var backup_value = JSON.stringify(page_info)
     $("#backup_button").attr("value", backup_value)
 }
+
 /*********************************************************************************************************************
-                                               回滚函数 
+*                                               回滚函数 
 *********************************************************************************************************************/
 function rollback()
 {
@@ -372,65 +378,45 @@ function rollback()
     $("#rollback_button").attr("value", rollback_value)
 }
 
+/*********************************************************************************************************************
+ *                                          显示数据文件输入框
+*********************************************************************************************************************/
+function show_input()
+{
+    if($("#data").is(":checked"))
+    {
+        $("#inputFile").removeAttr("style")    
+    }
+    else
+    {
+        $("#inputFile").attr('style',"display:none")    
+    }
+    
+}
 
-/// 
-/// /********************************
-///         显示模态框控制
-/// ********************************/
-/// function show_build_modal(open='true')
-/// {
-///     if(open == 'true')
-///     {
-///         
-///         choice=$("input[type='radio']:checked").val();
-///         build_info=check_form()
-///         if(build_info == false)
-///         {
-///             return false    
-///         }
-///         if(choice == 'on_route')
-///         {
-///             $("#build_service").text(build_info['server']+'  '+build_info['route']+' 路')
-///         }
-///         else if(choice == 'on_ring')
-///         {
-///             $("#build_service").text(build_info['server']+'  '+build_info['route']+' 路  '+build_info['ring']+' 环')
-///         }
-/// 
-///         if(build_info['file'] == 2)
-///         {
-///             $("#build_content").text()
-///             $("#file_path_label").show()
-///             $("#file_list_label").show()
-///             $("#build_content").text('bin 文件和conf 文件')
-///             $("#rsync_file_path").text(build_info['rsync_path'])
-///             $("#rsync_file_list").text(build_info['rsync_file'])
-///         }
-///         else if (build_info['file'] == 0)
-///         {
-///             $("#build_content").text()
-///             $("#rsync_file_path").text('')
-///             $("#build_content").text('bin 文件')
-///             $("#file_path_label").hide()
-///             $("#file_list_label").hide()
-///         }
-///         else if (build_info['file'] == 1)
-///         {
-///             $("#build_content").text()
-///             $("#file_path_label").show()
-///             $("#file_list_label").show()
-///             $("#build_content").text('conf 文件')
-///             $("#rsync_file_path").text(build_info['rsync_path'])
-///             $("#rsync_file_list").text(build_info['rsync_file'])
-///         }
-///         $('#build_modal').modal('show')
-///     }
-///     else
-///     {
-///         $('#build_modal').modal('hide')    
-///     }
-/// }
-/// 
+/*********************************************************************************************************************
+*                                            显示模态框控制
+*********************************************************************************************************************/
+function show_build_modal(open='true')
+{
+    if(open == 'true')
+    {
+        
+        build_info=check_form()
+        if(build_info == false)
+        {
+            return false    
+        }
+        $("#build_service").text("上线模块为："+" "+build_info['module_path'])
+        $("#build_route").text("模块上线的路为："+build_info['module_route'])
+        $('#BuildModal').modal('show')
+    }
+    else
+    {
+        $('#BuildModal').modal('hide')    
+    }
+}
+
 /// function show_deploy_modal(open='true')
 /// {
 ///     if(open == 'true')

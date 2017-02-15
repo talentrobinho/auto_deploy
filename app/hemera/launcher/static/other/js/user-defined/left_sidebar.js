@@ -316,8 +316,7 @@ function build()
     //var page_info = get_page_info(is_online="true")
     var form_info = check_form(is_online="true")
     $.post("/launcher/deploy/build", form_info, function(json_data){
-                
-                alert(json_data[0]['status'])
+        alert(json_data[0]['status'])
         },
         "json");
     // show_build_modal('false')

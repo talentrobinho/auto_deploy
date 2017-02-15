@@ -4,6 +4,7 @@ import time
 import os
 import subprocess
 import yaml
+import json
 from flask import Blueprint, render_template, session
 from flask import jsonify, abort, make_response, request
 from .util import *
@@ -48,8 +49,8 @@ def admini_index():
 @lau.route('/backup/back', methods=['POST'])
 def backup_back():
     """ 用于页面备份按钮调用 """
-    data = request.get_json()
-    tgt = data['module_path'] + '*'
+    data = request.form.get("module_path", "None")
+    tgt = data + '*'
     param = {
             'client':'local',
             'tgt':tgt,
@@ -71,8 +72,8 @@ def backup_back():
 @lau.route('/deploy/build', methods=['POST'])
 def deploy_build():
     """ jenkins job 远程构建，用于页面触发job构建按钮调用 """
-    data = request.get_json()
-    job = data['module_path']
+    data = request.form.get("module_path", "None")
+    job = data
     try:
         next_build_number = japi.get_job_info(job)['nextBuildNumber']
     except:
@@ -101,8 +102,10 @@ def deploy_build():
 @lau.route('/deploy/launch', methods=['POST'])
 def deploy_launch():
     """ salt 文件分发部署，用于页面触发上线按钮调用 """
-    data = request.get_json()
-    tgt = data['module_path'] + '*'
+    data = request.form.get("module_path", "None")
+    print "--------****************---------"
+    print data
+    tgt = data + '*'
     arg = None
     #TODO arg = session['module_path']    # 有没有路标A
     param = {
@@ -122,8 +125,8 @@ def deploy_launch():
 @lau.route('/rollback/roll', methods=['POST'])
 def rollback_roll():
     """ 用于页面回滚按钮调用 """
-    data = request.get_json()
-    tgt = data['module_path'] + '*'
+    data = request.form.get("module_path", "None")
+    tgt = data + '*'
     param = {
             'client':'local',
             'tgt':tgt,
@@ -159,7 +162,7 @@ def log():
 
 ############################################    api    ###########################################
 
-@lau.route('/api/ip/<module>')
+@lau.route('/api/ip/<module>', methods=['GET'])
 def get_module_ip(module):
     tgt = module + '*'
     param = {
@@ -208,10 +211,7 @@ def get_build_info(module_path):
     build_info = japi.get_build_info(module, build_number)
     return jsonify(build_info)
 
-
 ##################################################################
-
-
 
 @lau.route('/deploy/machine')
 def machine():

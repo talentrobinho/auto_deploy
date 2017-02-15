@@ -105,23 +105,26 @@
                     <div class="form-group">
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox" id="bin">
+                          <input type="checkbox" id="bin" checked disabled>
                           Bin File
                         </label>
                       </div>
 
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox" id="conf">
+                          <input type="checkbox" id="conf" checked disabled>
                           Configure File
                         </label>
                       </div>
-  
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox" id="data">
+                          <input type="checkbox" id="data" onclick="show_input()">
                           Data File
                         </label>
+                      </div>
+                      <div class="form-group" id="inputFile" style="display:none">
+                        <label>File List</label>
+                        <input type="text" class="form-control" placeholder="file1, file2 ...">
                       </div>
                   </div>
 
@@ -176,7 +179,12 @@
                 </div>
                 -->
               <div class="box-footer">
-                <button type="submit" class="btn btn-primary" id="build_button" onclick="build()">Build</button>
+                <!-- 两种显示模态框方法-->
+                <!-- 方法1
+                <a href="#BuildModal" class="btn btn-primary" data-toggle="modal"><b>Follow</b></a>
+                -->
+                <!-- 方法2 -->
+                <button type="submit" class="btn btn-primary" id="build_button" data-toggle="modal" onclick="show_build_modal()">Build</button>
                 <button type="submit" class="btn btn-primary" onclick="deploy()">Deploy</button>
               </div>
             </form>
@@ -372,6 +380,42 @@
 
         <!-- ############################# 日志模态框END ###################################### -->
 
+
+
+        <!-- ############################# Build模态框 ###################################### -->
+
+             <div class="modal" id="BuildModal">
+               <div class="modal-dialog">
+                 <div class="modal-content">
+                   <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title">构建信息</h4>
+                   </div>
+                   <div class="modal-body">
+                        <div>
+                            <label>
+                                <p id="build_service"></p>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <p id="build_route"></p>
+                            </label>
+                        </div>
+                   </div>
+                   <div class="modal-footer">
+                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                     <button type="button" class="btn btn-primary" onclick="build()">Sure</button>
+                   </div>
+                 </div>
+                 <!-- /.modal-content -->
+               </div>
+               <!-- /.modal-dialog -->
+             </div>
+             <!-- /.modal -->
+
+        <!-- ############################# Build模态框END ###################################### -->
 
 
             </div>

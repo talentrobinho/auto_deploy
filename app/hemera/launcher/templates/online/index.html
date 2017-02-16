@@ -65,8 +65,8 @@
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#online" data-toggle="tab">Online</a></li>
-              <li><a href="#timeline" data-toggle="tab">Backup</a></li>
-              <li><a href="#settings" data-toggle="tab">RollBack</a></li>
+              <li><a href="#backup" data-toggle="tab">Backup</a></li>
+              <li><a href="#rollback" data-toggle="tab">RollBack</a></li>
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                   Log <span class="caret"></span>
@@ -118,13 +118,9 @@
                       </div>
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox" id="data" onclick="show_input()">
+                          <input type="checkbox" id="data">
                           Data File
                         </label>
-                      </div>
-                      <div class="form-group" id="inputFile" style="display:none">
-                        <label>File List</label>
-                        <input type="text" class="form-control" placeholder="file1, file2 ...">
                       </div>
                   </div>
 
@@ -184,8 +180,8 @@
                 <a href="#BuildModal" class="btn btn-primary" data-toggle="modal"><b>Follow</b></a>
                 -->
                 <!-- 方法2 -->
-                <button type="submit" class="btn btn-primary" id="build_button" data-toggle="modal" onclick="show_build_modal()">Build</button>
-                <button type="submit" class="btn btn-primary" onclick="deploy()">Deploy</button>
+                <button type="button" class="btn btn-primary" id="build_button" onclick="show_build_modal()">Build</button>
+                <button type="button" class="btn btn-primary" onclick="deploy()">Deploy</button>
               </div>
             </form>
         <!-- ######################################################### -->
@@ -194,7 +190,7 @@
 
 
 
-              <div class="tab-pane" id="timeline">
+              <div class="tab-pane" id="backup">
         <!-- ######################################################### -->
                 <form role="form">
                
@@ -202,25 +198,30 @@
                     <div class="form-group">
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox">
+                          <input type="checkbox" checked disabled>
                           Bin File
                         </label>
                       </div>
 
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox">
+                          <input type="checkbox" checked disabled>
                           Configure File
                         </label>
                       </div>
 
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox">
+                          <input type="checkbox" id="backup_data" onclick="show_input()">
                           Data File
                         </label>
                       </div>
                      </div>
+
+                      <div class="form-group" id="inputFile" style="display:none">
+                        <label>File List</label>
+                        <input type="text" class="form-control" placeholder="file1, file2 ...">
+                      </div>
 
                 <div class="box-footer">
                       <button type="submit" class="btn btn-primary">Backup</button>
@@ -230,7 +231,7 @@
               </div>
               <!-- /.tab-pane -->
 
-              <div class="tab-pane" id="settings">
+              <div class="tab-pane" id="rollback">
         <!-- ######################################################### -->
                 <form role="form">
                

@@ -6,7 +6,7 @@ document.scripts[0].src="userInfo.js"
 /*****************************
         获取树节点信息
 ******************************/
-function get_selected_treeInfo(info, join_str='_')
+function get_selected_treeInfo(info, joinstr="_")
 {
 
     //获取所选树节点信息
@@ -26,7 +26,7 @@ function get_selected_treeInfo(info, join_str='_')
         var root = $('#leftbar').tree('getParent', node.target);
         while(root)
         {   
-            tr = root.text + join_str + tr; 
+            tr = root.text + joinstr + tr; 
             node = root;
             root = $('#leftbar').tree('getParent', node.target);
         }
@@ -341,12 +341,10 @@ function deploy()
     var build_info = JSON.parse(build_val)
     for(var key in build_info)
     {
-        alert(build_info[key])
-        alert(form_info[key])
         //if(build_info[key] != page_info[key])
         if(build_info[key] != form_info[key])
         {
-            alert("构建与上线信息不符, 差异如下：\n构建的"+key+"为: "+build_info[key]+"\n发布的"+key+"为: "+form_info[key])
+            alert("构建与上线信息不符, 差异如下：\n构建的Server为: "+build_info[key]+"\n发布的Server为: "+form_info[key])
         }
     }
     $.post("/deploy/launch", form_info, function(json_data){
@@ -384,7 +382,7 @@ function rollback()
 *********************************************************************************************************************/
 function show_input()
 {
-    if($("#data").is(":checked"))
+    if($("#backup_data").is(":checked"))
     {
         $("#inputFile").removeAttr("style")    
     }

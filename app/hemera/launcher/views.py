@@ -13,6 +13,7 @@ from .. import app
 '''
 from .cgi.make_server_info import *
 #from flask.ext.cache import Cache
+from flask_wtf.csrf import CsrfProtect
 '''
     lizhansheng add end
 '''
@@ -292,7 +293,9 @@ def ip():
 #  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
 #}
 
+csrf = CsrfProtect()
 #@csrf_exempt
+@csrf.exempt
 @lau.route('/tree/getsidebar', methods=['GET'])
 def sidebar_content():
     root=[]

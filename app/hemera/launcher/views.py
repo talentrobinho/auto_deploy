@@ -5,7 +5,7 @@ import os
 import subprocess
 import yaml
 import json
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, Flask
 from flask import jsonify, abort, make_response, request
 from .util import *
 from .. import app
@@ -13,8 +13,23 @@ from .. import app
     lizhansheng add
 '''
 from .cgi.make_server_info import *
-#from flask.ext.cache import Cache
+from flask_cache import Cache
 from flask_wtf.csrf import CsrfProtect
+import redis
+'''
+    redis
+'''
+
+config = {
+  'CACHE_TYPE': app.config['CACHE_TYPE'],
+  'CACHE_REDIS_HOST': app.config['CACHE_REDIS_HOST'],
+  'CACHE_REDIS_PORT': app.config['CACHE_REDIS_PORT'],
+  'CACHE_REDIS_DB': app.config['CACHE_REDIS_DB'],
+  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
+}
+cache = Cache()
+cache = cache.init_app(app, config=config)
+
 '''
     lizhansheng add end
 '''
@@ -34,6 +49,7 @@ sapi = SersaltAPI(app)
 '''
 
 @lau.route('/online/index', methods=['GET'])
+#@cache(timeout = 300)
 def index_online():
     """ 主页面 """
     return render_template('online/index.html')
@@ -62,12 +78,12 @@ def backup_back():
     if param['tgt'] == '*':
         rv = 'PAEAM: tgt is *.'
     else:
-        r = sapi.salt_cmd(param)
-        result = yaml.load(r.text)['return']
-        for key,value in result[0].iteritems():
-            data = {'message':str({key:value})}
-            #sse.publish(data, type='backup_output', channel='backup')    # 执行信息输出
-        rv = 'backup ok'
+        #r = sapi.salt_cmd(param)
+        #result = yaml.load(r.text)['return']
+        #for key,value in result[0].iteritems():
+        #    data = {'message':str({key:value})}
+        #    #sse.publish(data, type='backup_output', channel='backup')    # 执行信息输出
+        rv = 0
     return jsonify({'result':rv})
 
 @lau.route('/deploy/build', methods=['POST'])
@@ -234,21 +250,7 @@ def ip():
                             lizhansheng add
     ##########################################################################
 '''
-
-'''
-    redis
-'''
-#cache = Cache()
-#config = {
-#  'CACHE_TYPE': app.config['CACHE_TYPE'],
-#  'CACHE_REDIS_HOST': app.config['CACHE_REDIS_HOST'],
-#  'CACHE_REDIS_PORT': app.config['CACHE_REDIS_PORT'],
-#  'CACHE_REDIS_DB': app.config['CACHE_REDIS_DB'],
-#  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
-#}
-
 csrf = CsrfProtect()
-#@csrf_exempt
 @csrf.exempt
 @lau.route('/tree/getsidebar', methods=['GET'])
 def sidebar_content():
@@ -277,7 +279,6 @@ def sidebar_content():
 def rr_list():
     service_info=get_service_info()
     rr_info = route_map_ring(service_info)
-    #return HttpResponse(json.dumps(rr_info), content_type='application/json')
     return jsonify(rr_info)
 
 @lau.route('/api/getip', methods=['GET'])
@@ -291,14 +292,85 @@ def get_ip():
     """
     tmp_dict = {}
     if request.method == "GET":
-        #server = request.GET['server']
         server = request.args.get('server')
-    #print server
-    #tmp_dict['ip'] = get_service_ip(server)
-    #print tmp_dict
-    #return HttpResponse(json.dumps(get_service_ip(server)), content_type='application/json')
     return jsonify(get_service_ip(server))
 
+class RedisOp(object):
+    def __init__(self, host, port=6739):
+        self.redis_host = host
+        self.redis_port = port
+
+    def redis_conn(self):
+        try:
+            redis_obj = redis.Redis(host = self.redis_host, port = self.redis_port)
+        except:
+            pass
+
+        return redis_obj
+
+
+redis_inst = RedisOp(host = app.config['CACHE_REDIS_HOST'], port = app.config['CACHE_REDIS_PORT'])
+redis_cache = redis_inst.redis_conn()
+
+def is_book(user, server, check_type='user'):
+    #redis_cache = redis.Redis(host = app.config['CACHE_REDIS_HOST'], port = app.config['CACHE_REDIS_PORT'])
+    check_status = {}
+    if check_type == 'user':
+        lock_info_list=redis_cache.get("xx%s"%user)
+        if not lock_info_list:
+            lock_info_list = []
+            lock_info_list.append(server)
+            redis_cache.set("%s"%user, lock_info_list, ex=app.config['CACHE_REDIS_TIMEOUT'])
+            redis_cache.set("%s"%server, user, ex=app.config['CACHE_REDIS_TIMEOUT'])
+            check_status['status'] = 0
+        else:
+            lock_info_list = eval(lock_info_list)
+            if server in lock_info_list:
+                #status = 1
+                check_status['status'] = 1
+            else:
+                lock_info_list.append(server)
+                redis_cache.set("%s"%user, lock_info_list, ex=app.config['CACHE_REDIS_TIMEOUT'])
+                check_status['status'] = 0
+
+    elif check_type == 'server':
+        lock_info_list=redis_cache.get("%s"%server)
+        if not lock_info_list:
+            #redis_cache.set("xx%s"%user, lock_info_list, ex=app.config['CACHE_REDIS_TIMEOUT'])
+            check_status['status'] = 0
+        else:
+            #lock_info_list = eval(lock_info_list)
+            check_status['status'] = 2
+            check_status['info'] = lock_info_list
+
+    
+    return check_status
+
+
+
+@lau.route('/online/lock', methods=['POST'])
+def lock_online():
+    '''
+        靠靠靠
+    '''
+    #response.set_cookie('Name','Hyman')
+    op_user = request.cookies.get('_adtech_user') 
+    op_server = request.form.get('module_path', 'None') 
+    server_status = is_book(op_user, op_server, check_type="server")
+    print "=============== check server ================="
+    print server_status
+    if server_status['status'] == 2:
+        result = {'result': server_status['status'], 'result_info':server_status['info']}
+    else:
+        user_status = is_book(op_user, op_server, check_type="user")
+        print "=============== check user ================="
+        print user_status
+        result = {'result': user_status['status']}
+
+    print "*"*50
+    return jsonify(result)
+    
+    
 '''
     ##########################################################################
                             lizhansheng add end

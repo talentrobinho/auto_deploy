@@ -50,7 +50,7 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <a href="#" class="btn btn-primary btn-block"><b>online</b></a>
+                    <a href="#" class="btn btn-primary btn-block" onclick="lock_online()"><b>online</b></a>
                 </div>    
                 <!-- /.box-footer -->
             </div>
@@ -180,8 +180,8 @@
                 <a href="#BuildModal" class="btn btn-primary" data-toggle="modal"><b>Follow</b></a>
                 -->
                 <!-- 方法2 -->
-                <button type="button" class="btn btn-primary" id="build_button" onclick="show_build_modal()">Build</button>
-                <button type="button" class="btn btn-primary" onclick="deploy()">Deploy</button>
+                <button type="button" class="btn btn-primary" id="build_button" onclick="show_build_modal()" disabled>Build</button>
+                <button type="button" class="btn btn-primary" id="deploy_button" onclick="deploy()" disabled>Deploy</button>
               </div>
             </form>
         <!-- ######################################################### -->
@@ -224,7 +224,7 @@
                       </div>
 
                 <div class="box-footer">
-                      <button type="submit" class="btn btn-primary">Backup</button>
+                      <button type="button" class="btn btn-primary" id="backup_button" onclick="backup()" disabled>Backup</button>
                     </div>
                 </form>
         <!-- ######################################################### -->
@@ -260,7 +260,7 @@
                     </div>
 
                     <div class="box-footer">
-                      <button type="submit" class="btn btn-primary">RollBack</button>
+                      <button type="button" class="btn btn-primary" id="rollback_button" disabled>RollBack</button>
                     </div>
                 </form>
         <!-- ######################################################### -->

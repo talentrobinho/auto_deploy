@@ -317,7 +317,16 @@ function build()
     //var page_info = get_page_info(is_online="true")
     var form_info = check_form(is_online="true")
     $.post("/launcher/deploy/build", form_info, function(json_data){
-        alert(json_data[0]['status'])
+                //alert(json_data[0]['result'])
+                status_code = json_data['result']
+                if(status_code == 0)
+                {
+                    alert("Build successful!")    
+                }
+                else
+                {
+                    alert("Build failed!")    
+                }
         },
         "json");
     show_build_modal('false')
@@ -346,8 +355,17 @@ function deploy()
             alert("构建与上线信息不符, 差异如下：\n构建的Server为: "+build_info[key]+"\n发布的Server为: "+form_info[key])
         }
     }
-    $.post("/deploy/launch", form_info, function(json_data){
-                alert(json_data[0]['status'])
+    $.post("/launcher/deploy/launch", form_info, function(json_data){
+                //alert(json_data[0]['result'])
+                status_code = json_data['result']
+                if(status_code == 0)
+                {
+                    alert("Deploy successful!")    
+                }
+                else
+                {
+                    alert("Deploy failed!")    
+                }
         },
         "json");
     //show_deploy_modal('false')
@@ -359,10 +377,33 @@ function deploy()
 *********************************************************************************************************************/
 function backup()
 {
+    /*
     var page_info = get_page_info()
     // 将js对象转换为json格式的字符串
     var backup_value = JSON.stringify(page_info)
     $("#backup_button").attr("value", backup_value)
+    */
+
+
+    var form_info = check_form(is_online="true")
+    $.post("/launcher/backup/back", form_info, function(json_data){
+                //alert(json_data[0]['result'])
+                //alert(json_data['result'])
+                status_code = json_data['result']
+                if(status_code == 0)
+                {
+                    alert("Backup successful!")    
+                }
+                else if (status_code == 1)
+                {
+                    alert("Parameter error!")    
+                }
+                else
+                {
+                    alert("Backup failed!")    
+                }
+        },
+        "json");
 }
 
 /*********************************************************************************************************************
@@ -370,10 +411,26 @@ function backup()
 *********************************************************************************************************************/
 function rollback()
 {
+    /*
     var page_info = get_page_info()
     // 将js对象转换为json格式的字符串
     var rollback_value = JSON.stringify(page_info)
     $("#rollback_button").attr("value", rollback_value)
+    */
+
+    var form_info = check_form(is_online="true")
+    $.post("/launcher/rollback/roll", form_info, function(json_data){
+                status_code = json_data['result']
+                if(status_code == 0)
+                {
+                    alert("Rollback successful!")    
+                }
+                else
+                {
+                    alert("Rollback failed!")    
+                }
+        },
+        "json");
 }
 
 /*********************************************************************************************************************
@@ -427,10 +484,52 @@ function show_build_modal(open='true')
 ///     }
 /// }
 /// /// 
-//
-//
-//
-//
+
+
+/*********************************************************************************************************************
+*                                               锁定上线
+*********************************************************************************************************************/
+function lock_online()
+{
+    tr = get_selected_treeInfo('tree')
+    tr = check_form()
+    if(tr == false)
+    {
+        return false    
+    }
+    //alert("lock: "+tr['module_path'])
+    $.post("/launcher/online/lock", {"module_path":tr['module_path']}, function(json_data){
+        //$("#online_modal").modal('hide')
+                status_code = json_data['result']
+                if(status_code == 0)
+                {
+                    alert("lock successful!")    
+                }
+                else if(status_code == 1)
+                {
+                    alert("You always book this server!")    
+                }
+                else if(status_code == 2)
+                {
+                    status_info = json_data['result_info']
+                    alert(status_info+"is online!!!")    
+                }
+                else
+                {
+                    alert(status_code)
+                    alert("lock failed!")    
+                }
+    },
+    'json');
+    $("#build_button").removeAttr('disabled')
+    $("#deploy_button").removeAttr('disabled')
+    $("#backup_button").removeAttr('disabled')
+    $("#rollback_button").removeAttr('disabled')
+}
+
+
+
+
 /// /*********************************************************************************************************************
 ///                                                to_online 
 /// *********************************************************************************************************************/
@@ -457,22 +556,5 @@ function show_build_modal(open='true')
 ///                 }
 ///         });
 /// }
-/// /*********************************************************************************************************************
-///                                                Lock online 
-/// *********************************************************************************************************************/
-/// function sure_online()
-/// {
-///     tr = get_selected_treeInfo('tree')
-///     if(tr == false)
-///     {
-///         return false    
-///     }
-///     $.getJSON("/lock_online/", {"service":tr}, function(json_data){
-///         $("#online_modal").modal('hide')
-///     });
-///     $("#button_build").removeAttr('disabled')
-///     $("#button_deploy").removeAttr('disabled')
-///     
-/// }
-/// 
+
 

@@ -197,20 +197,23 @@ $(document).ready(function(){
 
 
             /*** 检查是否在上线状态，开启构建、分发按钮 ***/
-            /*
-            $.getJSON("/op_online/",{"service":tr,"user":cookie_val}, function(json_data){
-                        if(json_data[0]['status']=='is_online')
+            //alert(tr)
+            $.post("/launcher/online/checklock",{"module_path":tr,"user":cookie_val}, function(json_data){
+                        if(json_data['result']==0)
                         {
-                            $("#button_build").removeAttr('disabled')
-                            $("#button_deploy").removeAttr('disabled')
+                            $("#build_button").removeAttr('disabled')
+                            $("#deploy_button").removeAttr('disabled')
+                            $("#backup_button").removeAttr('disabled')
+                            $("#rollback_button").removeAttr('disabled')
                         }
                         else
                         {
-                            $("#button_build").attr('disabled',true)
-                            $("#button_deploy").attr('disabled',true)
+                            $("#build_button").attr('disabled',true)
+                            $("#deploy_button").attr('disabled',true)
+                            $("#backup_button").attr('disabled',true)
+                            $("#rollback_button").attr('disabled',true)
                         }
             });
-            */
         }
 
         });
@@ -504,15 +507,23 @@ function lock_online()
                 if(status_code == 0)
                 {
                     alert("lock successful!")    
+                    $("#build_button").removeAttr('disabled')
+                    $("#deploy_button").removeAttr('disabled')
+                    $("#backup_button").removeAttr('disabled')
+                    $("#rollback_button").removeAttr('disabled')
                 }
                 else if(status_code == 1)
                 {
                     alert("You always book this server!")    
+                    $("#build_button").removeAttr('disabled')
+                    $("#deploy_button").removeAttr('disabled')
+                    $("#backup_button").removeAttr('disabled')
+                    $("#rollback_button").removeAttr('disabled')
                 }
                 else if(status_code == 2)
                 {
                     status_info = json_data['result_info']
-                    alert(status_info+"is online!!!")    
+                    alert(status_info+" is online!!!")    
                 }
                 else
                 {
@@ -521,10 +532,6 @@ function lock_online()
                 }
     },
     'json');
-    $("#build_button").removeAttr('disabled')
-    $("#deploy_button").removeAttr('disabled')
-    $("#backup_button").removeAttr('disabled')
-    $("#rollback_button").removeAttr('disabled')
 }
 
 

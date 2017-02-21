@@ -254,13 +254,17 @@ csrf = CsrfProtect()
 @csrf.exempt
 @lau.route('/tree/getsidebar', methods=['GET'])
 def sidebar_content():
+    '''
+        make structiong of tree for server
+        Returns:
+            return data of json
+    '''
     root=[]
     tmp_root=[]
     fa=[]
     tmp={}
     deal_list=[]
     sidebar_list=get_service_info()
-    ##print type(sidebar_list)
     for line in sidebar_list:
         if line:
             line_tmp = line.strip('/').split('/')
@@ -284,10 +288,9 @@ def rr_list():
 @lau.route('/api/getip', methods=['GET'])
 def get_ip():
     """
-        Explain:
-            ¿¿request.POST['server']¿¿¿ IP ¿¿
-        Render:
-            ¿¿ IP ¿JSON ¿¿
+        ¿¿¿¿¿¿¿¿¿IP¿¿
+        Returns:
+            ¿¿¿¿¿¿¿IP¿¿json¿¿¿¿¿¿
             {'ip': '1.1.1.1 2.2.2.2'}
     """
     tmp_dict = {}
@@ -296,6 +299,9 @@ def get_ip():
     return jsonify(get_service_ip(server))
 
 class RedisOp(object):
+    '''
+        ¿¿Redis¿¿¿
+    '''
     def __init__(self, host, port=6739):
         self.redis_host = host
         self.redis_port = port
@@ -312,36 +318,88 @@ class RedisOp(object):
 redis_inst = RedisOp(host = app.config['CACHE_REDIS_HOST'], port = app.config['CACHE_REDIS_PORT'])
 redis_cache = redis_inst.redis_conn()
 
-def is_book(user, server, check_type='user'):
-    #redis_cache = redis.Redis(host = app.config['CACHE_REDIS_HOST'], port = app.config['CACHE_REDIS_PORT'])
+def is_book(user, server):
+    '''
+        ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+
+        Args:
+            user: ¿¿¿¿¿¿¿¿¿¿
+            server: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+
+        Returns:
+            check_book['status'] = value (value¿¿¿¿)
+            0: ¿¿¿¿¿¿¿¿¿¿¿¿¿
+            1: ¿¿¿¿¿¿¿¿¿¿¿¿¿
+            2: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+               ¿¿¿¿¿2¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+               check_book['info'] = book_server_list
+
+        Raises:
+            Null
+    '''
+    check_book = {}
+    lock_info_list=redis_cache.get("%s"%user)
+    if not lock_info_list:
+        check_book['status'] = 0
+    else:
+        lock_info_list = eval(lock_info_list)
+        if server in lock_info_list:
+            check_book['status'] = 1
+        else:
+            check_book['status'] = 2
+        check_book['info'] = lock_info_list
+    return check_book
+
+
+def book(user, server, check_type='user'):
+    '''
+        Args:
+            user: ¿¿¿¿¿¿¿¿¿¿
+            server: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+            check_type: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+                        ¿¿¿2¿¿¿¿user(¿¿¿)¿server
+
+        Returns:
+            ¿check_type == user¿¿¿¿¿¿¿
+                check_status = {'status': ¿¿¿}
+                0: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+                1: ¿¿¿¿¿¿¿¿¿
+            ¿check_type == server¿¿¿¿¿¿¿
+                check_status = {'status': ¿¿¿, 'info': ¿¿¿}
+                0: ¿¿¿¿¿¿¿¿¿¿¿
+                1: ¿¿¿¿¿¿¿¿¿
+                2¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+
+        Raises:
+            Null
+    '''
     check_status = {}
+    book_list = []
     if check_type == 'user':
-        lock_info_list=redis_cache.get("xx%s"%user)
-        if not lock_info_list:
-            lock_info_list = []
-            lock_info_list.append(server)
-            redis_cache.set("%s"%user, lock_info_list, ex=app.config['CACHE_REDIS_TIMEOUT'])
+        check_book = is_book(user, server)
+        if check_book['status'] == 1:
+            check_status['status'] = 1
+        elif check_book['status'] == 0:
+            book_list.append(server)
+            redis_cache.set("%s"%user, book_list, ex=app.config['CACHE_REDIS_TIMEOUT'])
             redis_cache.set("%s"%server, user, ex=app.config['CACHE_REDIS_TIMEOUT'])
             check_status['status'] = 0
-        else:
-            lock_info_list = eval(lock_info_list)
-            if server in lock_info_list:
-                #status = 1
-                check_status['status'] = 1
-            else:
-                lock_info_list.append(server)
-                redis_cache.set("%s"%user, lock_info_list, ex=app.config['CACHE_REDIS_TIMEOUT'])
-                check_status['status'] = 0
+        elif check_book['status'] == 2:
+            check_book['info'].append(server)
+            redis_cache.set("%s"%user, check_book['info'], ex=app.config['CACHE_REDIS_TIMEOUT'])
+            check_status['status'] = 0
+            
 
     elif check_type == 'server':
         lock_info_list=redis_cache.get("%s"%server)
         if not lock_info_list:
-            #redis_cache.set("xx%s"%user, lock_info_list, ex=app.config['CACHE_REDIS_TIMEOUT'])
             check_status['status'] = 0
         else:
-            #lock_info_list = eval(lock_info_list)
-            check_status['status'] = 2
-            check_status['info'] = lock_info_list
+            if lock_info_list == user:
+                check_status['status'] = 1
+            else:
+                check_status['status'] = 2
+                check_status['info'] = lock_info_list
 
     
     return check_status
@@ -352,27 +410,45 @@ def is_book(user, server, check_type='user'):
 def lock_online():
     '''
         ¿¿¿¿¿¿
+
+        Returns:
+            result = {'result': ¿¿¿¿¿, 'result_info': ¿¿¿¿}
+            0: ¿¿¿¿¿¿¿¿¿¿¿¿
+            1: ¿¿¿¿¿¿¿¿¿¿¿¿¿
+            2: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
     '''
-    #response.set_cookie('Name','Hyman')
     op_user = request.cookies.get('_adtech_user') 
     op_server = request.form.get('module_path', 'None') 
-    server_status = is_book(op_user, op_server, check_type="server")
-    print "=============== check server ================="
-    print server_status
+    server_status = book(op_user, op_server, check_type="server")
     if server_status['status'] == 2:
         result = {'result': server_status['status'], 'result_info':server_status['info']}
     else:
-        user_status = is_book(op_user, op_server, check_type="user")
-        print "=============== check user ================="
-        print user_status
+        user_status = book(op_user, op_server, check_type="user")
         result = {'result': user_status['status']}
 
-    print "*"*50
     return jsonify(result)
     
+@lau.route('/online/checklock', methods=['POST'])
+def check_lock():
+    '''
+        Check whether the user is booked this service
+
+        Returns:
+            0: Says it has a reservation
+            1: Said without reservation
+    '''
+    check_user = request.form.get('user', 'None')
+    check_server = request.form.get('module_path', 'None')
+    check_status = is_book(check_user, check_server)
+    if check_status['status'] == 1:
+        result = {'result': 0}
+    else:
+        result = {'result': 1}
+    return jsonify(result)
     
 '''
     ##########################################################################
                             lizhansheng add end
     ##########################################################################
 '''
+

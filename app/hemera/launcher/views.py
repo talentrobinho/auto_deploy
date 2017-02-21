@@ -409,13 +409,17 @@ def book(user, server, check_type='user'):
 @lau.route('/online/lock', methods=['POST'])
 def lock_online():
     '''
-        ¿¿¿¿¿¿
+        Booking online interface
+    
+        Args:
+            user: username
+            module_path: The front page the selected service
 
         Returns:
-            result = {'result': ¿¿¿¿¿, 'result_info': ¿¿¿¿}
-            0: ¿¿¿¿¿¿¿¿¿¿¿¿
-            1: ¿¿¿¿¿¿¿¿¿¿¿¿¿
-            2: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+            result = {'result': status_code, 'result_info': book_info}
+            0: According to the current user booking service success
+            1: Said the current user has made a reservation servic 
+            2: Said the current user want to reserve the service has been reservation
     '''
     op_user = request.cookies.get('_adtech_user') 
     op_server = request.form.get('module_path', 'None') 

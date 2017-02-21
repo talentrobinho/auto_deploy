@@ -51,12 +51,12 @@ sapi = SersaltAPI(app)
 @lau.route('/online/index', methods=['GET'])
 #@cache(timeout = 300)
 def index_online():
-    """ Ö÷Ò³Ãæ """
+    """ ä¸Šçº¿çš„ä¸»é¡µé¢ """
     return render_template('online/index.html')
 
 @lau.route('/admini/index', methods=['GET'])
 def admini_index():
-    """ Ö÷Ò³Ãæ """
+    """ æƒé™ç®¡ç†çš„ä¸»é¡µé¢ """
     return render_template('admini/index.html')
 
 '''
@@ -65,7 +65,7 @@ def admini_index():
 
 @lau.route('/backup/back', methods=['POST'])
 def backup_back():
-    """ ÓÃÓÚÒ³Ãæ±¸·İ°´Å¥µ÷ÓÃ """
+    """ ç”¨äºé¡µé¢å¤‡ä»½æŒ‰é’®è°ƒç”¨ """
     data = request.form.get("module_path", "None")
     tgt = data + '*'
     param = {
@@ -82,13 +82,13 @@ def backup_back():
         #result = yaml.load(r.text)['return']
         #for key,value in result[0].iteritems():
         #    data = {'message':str({key:value})}
-        #    #sse.publish(data, type='backup_output', channel='backup')    # Ö´ĞĞĞÅÏ¢Êä³ö
+        #    #sse.publish(data, type='backup_output', channel='backup')    # Ã–Â´ÃÃÃÃ…ÃÂ¢ÃŠÃ¤Â³Ã¶
         rv = 0
     return jsonify({'result':rv})
 
 @lau.route('/deploy/build', methods=['POST'])
 def deploy_build():
-    """ jenkins job Ô¶³Ì¹¹½¨£¬ÓÃÓÚÒ³Ãæ´¥·¢job¹¹½¨°´Å¥µ÷ÓÃ """
+    """ jenkins job è¿œç¨‹æ„å»ºï¼Œç”¨äºé¡µé¢è§¦å‘jobæ„å»ºæŒ‰é’®è°ƒç”¨ """
     data = request.form.get("module_path", "None")
     job = data
     try:
@@ -118,13 +118,13 @@ def deploy_build():
 
 @lau.route('/deploy/launch', methods=['POST'])
 def deploy_launch():
-    """ salt ÎÄ¼ş·Ö·¢²¿Êğ£¬ÓÃÓÚÒ³Ãæ´¥·¢ÉÏÏß°´Å¥µ÷ÓÃ """
+    """ salt æ–‡ä»¶åˆ†å‘éƒ¨ç½²ï¼Œç”¨äºé¡µé¢è§¦å‘ä¸Šçº¿æŒ‰é’®è°ƒç”¨ """
     data = request.form.get("module_path", "None")
     print "--------****************---------"
     print data
     tgt = data + '*'
     arg = None
-    #TODO arg = session['module_path']    # ÓĞÃ»ÓĞÂ·±êA
+    #TODO arg = session['module_path']    # Ã“ÃÃƒÂ»Ã“ÃÃ‚Â·Â±ÃªA
     param = {
             'client':'local',
             'tgt':tgt,
@@ -141,7 +141,7 @@ def deploy_launch():
 
 @lau.route('/rollback/roll', methods=['POST'])
 def rollback_roll():
-    """ ÓÃÓÚÒ³Ãæ»Ø¹ö°´Å¥µ÷ÓÃ """
+    """ ç”¨äºé¡µé¢å›æ»šæŒ‰é’®è°ƒç”¨ """
     data = request.form.get("module_path", "None")
     tgt = data + '*'
     param = {
@@ -165,7 +165,7 @@ def rollback_roll():
 
 @lau.route('/log', methods=['GET'])
 def log():
-    """ ÈÕÖ¾¼ÇÂ¼¼°Éó¼Æ """
+    """ æ—¥å¿—è®°å½•åŠå®¡è®¡ """
     t_list = []
     module = session['module_path']
     info = db.build_info.find({"Name" : module})
@@ -255,9 +255,9 @@ csrf = CsrfProtect()
 @lau.route('/tree/getsidebar', methods=['GET'])
 def sidebar_content():
     '''
-        make structiong of tree for server
-        Returns:
-            return data of json
+        ç”ŸæˆæœåŠ¡æ ‘å½¢åˆ—è¡¨
+        Returnsï¼š
+            è¿”å›æ ‘å½¢åˆ—è¡¨jsonæ•°æ®
     '''
     root=[]
     tmp_root=[]
@@ -273,14 +273,39 @@ def sidebar_content():
                 continue
             deal_list.append(line_list)
             tmp_root = Make_Tree_Json(tmp_root, line_list)
-    ##return HttpResponse(json.dumps(tmp_root), content_type='application/json')
     return jsonify(tmp_root)
 
-################################################################
-###         make select of route and ring json data          ###
-################################################################
 @lau.route('/tree/getrr', methods=['GET'])
 def rr_list():
+    '''
+        ç”Ÿæˆè·¯å’Œç¯ä¸‹æ‹‰åˆ—è¡¨çš„jsonæ•°æ®
+
+        Args:
+            Null
+        Returns:
+            è¿”å›æ•°æ®æ ¼å¼å¦‚ä¸‹ï¼š
+                [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          "ring0", 
+                          "ring1"
+                        ], 
+                        "content": "A"
+                      }, 
+                      {
+                        "children": [
+                          "ring0", 
+                          "ring1"
+                        ], 
+                        "content": "B"
+                      }]
+                  }
+                ]
+        Raises:
+            Null
+    '''
     service_info=get_service_info()
     rr_info = route_map_ring(service_info)
     return jsonify(rr_info)
@@ -288,9 +313,9 @@ def rr_list():
 @lau.route('/api/getip', methods=['GET'])
 def get_ip():
     """
-        ¿¿¿¿¿¿¿¿¿IP¿¿
+        ä»å‡¯æ’’æ¥å£è·å–ç”¨æˆ·é€‰ä¸­çš„æœåŠ¡çš„IPåˆ—è¡¨
         Returns:
-            ¿¿¿¿¿¿¿IP¿¿json¿¿¿¿¿¿
+            è¿”å›ç”¨æˆ·é€‰ä¸­æœåŠ¡çš„IPåˆ—è¡¨jsonæ•°æ®ï¼Œæ ¼å¼å¦‚ä¸‹ï¼š
             {'ip': '1.1.1.1 2.2.2.2'}
     """
     tmp_dict = {}
@@ -300,13 +325,25 @@ def get_ip():
 
 class RedisOp(object):
     '''
-        ¿¿Redis¿¿¿
+         åˆ›å»ºRedisé“¾æ¥ç±»
     '''
     def __init__(self, host, port=6739):
         self.redis_host = host
         self.redis_port = port
 
     def redis_conn(self):
+        '''
+            åˆ›å»ºRedisé“¾æ¥å¯¹è±¡
+
+            Args:
+                Null
+
+            Returns:
+                è¿”å›redisé“¾æ¥å¯¹è±¡
+
+            Raises:
+                Null
+        '''
         try:
             redis_obj = redis.Redis(host = self.redis_host, port = self.redis_port)
         except:
@@ -320,20 +357,22 @@ redis_cache = redis_inst.redis_conn()
 
 def is_book(user, server):
     '''
-        ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-
+        åˆ¤æ–­ç”¨æˆ·è¦ä¸Šçº¿çš„æœåŠ¡æ¨¡å—æ˜¯å¦å·²ç»é¢„è®¢
+    
         Args:
-            user: ¿¿¿¿¿¿¿¿¿¿
-            server: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-
+            user: è¦ä¸Šçº¿çš„ç”¨æˆ·çš„ç”¨æˆ·å
+            server: ç”¨æˆ·é€‰ä¸­çš„è¦ä¸Šçº¿çš„æœåŠ¡æ¨¡å—å
+    
         Returns:
-            check_book['status'] = value (value¿¿¿¿)
-            0: ¿¿¿¿¿¿¿¿¿¿¿¿¿
-            1: ¿¿¿¿¿¿¿¿¿¿¿¿¿
-            2: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-               ¿¿¿¿¿2¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
+            check_book['status'] = value (valueåˆ—è¡¨å¦‚ä¸‹)                                                                                                                                                        
+        Returns:
+            check_book['status'] = value (valueåˆ—è¡¨å¦‚ä¸‹)
+            0: è¡¨ç¤ºè¯¥ç”¨æˆ·æ²¡æœ‰ä»»ä½•é¢„è®¢ä¿¡æ¯
+            1: è¡¨ç¤ºè¯¥ç”¨æˆ·å·²ç»é¢„è®¢è¿™ä¸ªæœåŠ¡
+            2: è¡¨ç¤ºè¯¥ç”¨æˆ·æœ‰é¢„è®¢çš„ä¸Šçº¿æœåŠ¡ï¼Œä½†æ²¡æœ‰é¢„è®¢è¿™ä¸ªæœåŠ¡
+               å½“çŠ¶æ€å€¼ä¸º2æ—¶ï¼Œä¼šåŒæ—¶è¿”å›å·²é¢„è®¢æœåŠ¡åˆ—è¡¨ï¼Œæ ¼å¼å¦‚ä¸‹
                check_book['info'] = book_server_list
-
+    
         Raises:
             Null
     '''
@@ -352,27 +391,29 @@ def is_book(user, server):
 
 
 def book(user, server, check_type='user'):
+   
     '''
         Args:
-            user: ¿¿¿¿¿¿¿¿¿¿
-            server: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-            check_type: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-                        ¿¿¿2¿¿¿¿user(¿¿¿)¿server
-
+            user: è¦ä¸Šçº¿çš„ç”¨æˆ·çš„ç”¨æˆ·å
+            server: ç”¨æˆ·é€‰ä¸­çš„è¦ä¸Šçº¿çš„æœåŠ¡æ¨¡å—å
+            check_type: æŒ‡å®šæ˜¯é€šè¿‡ç”¨æˆ·ï¼Œè¿˜æ˜¯æœåŠ¡è¿›è¡Œé¢„è®¢çš„åˆ¤æ–­
+                        åªæ¥å—2ä¸ªå‚æ•°ï¼Œuser(é»˜è®¤å€¼)å’Œserver
+    
         Returns:
-            ¿check_type == user¿¿¿¿¿¿¿
-                check_status = {'status': ¿¿¿}
-                0: ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-                1: ¿¿¿¿¿¿¿¿¿
-            ¿check_type == server¿¿¿¿¿¿¿
-                check_status = {'status': ¿¿¿, 'info': ¿¿¿}
-                0: ¿¿¿¿¿¿¿¿¿¿¿
-                1: ¿¿¿¿¿¿¿¿¿
-                2¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿
-
+            å½“check_type == useræ—¶ï¼Œè¿”å›å€¼å¦‚ä¸‹
+                check_status = {'status': çŠ¶æ€ç }
+                0: è¡¨ç¤ºè¯¥ç”¨æˆ·æ²¡æœ‰é¢„è®¢æ­¤æœåŠ¡ï¼Œå¹¶ä¸”å¢åŠ ç”¨æˆ·é¢„è®¢ä¿¡æ¯
+                1: è¡¨ç¤ºè¯¥ç”¨æˆ·å·²ç»é¢„è®¢
+            å½“check_type == serveræ—¶ï¼Œè¿”å›å€¼å¦‚ä¸‹
+                check_status = {'status': çŠ¶æ€ç , 'info': ç”¨æˆ·å}
+                0: è¡¨ç¤ºæ­¤æœåŠ¡æ²¡æœ‰ç”¨æˆ·é¢„è®¢
+                1: è¡¨ç¤ºè¯¥ç”¨æˆ·å·²ç»é¢„è®¢
+                2ï¼šè¡¨ç¤ºæ­¤æœåŠ¡å·²æœ‰ç”¨æˆ·é¢„è®¢ï¼Œå¹¶è¿”å›å·²é¢„è®¢æ­¤æœåŠ¡çš„ç”¨æˆ·å
+    
         Raises:
             Null
     '''
+    
     check_status = {}
     book_list = []
     if check_type == 'user':
@@ -409,17 +450,20 @@ def book(user, server, check_type='user'):
 @lau.route('/online/lock', methods=['POST'])
 def lock_online():
     '''
-        Booking online interface
-    
-        Args:
-            user: username
-            module_path: The front page the selected service
+        é¢„è®¢ä¸Šçº¿æ¥å£
 
+        Args:
+            user: ç™»é™†çš„ç”¨æˆ·å
+            module_path: å‰ç«¯ç½‘é¡µé€‰ä¸­çš„æœåŠ¡
+    
         Returns:
-            result = {'result': status_code, 'result_info': book_info}
-            0: According to the current user booking service success
-            1: Said the current user has made a reservation servic 
-            2: Said the current user want to reserve the service has been reservation
+            result = {'result': é¢„è®¢çŠ¶æ€ç , 'result_info': é¢„è®¢ä¿¡æ¯}
+            0: è¡¨ç¤ºå½“å‰ç”¨æˆ·é¢„è®¢æœåŠ¡æˆåŠŸ
+            1: è¡¨ç¤ºå½“å‰ç”¨æˆ·å·²ç»é¢„è®¢äº†æœåŠ¡
+            2: è¡¨ç¤ºå½“å‰ç”¨æˆ·è¦é¢„è®¢çš„æœåŠ¡å·²ç»æœ‰äººé¢„è®¢
+
+        Raises:
+            Null
     '''
     op_user = request.cookies.get('_adtech_user') 
     op_server = request.form.get('module_path', 'None') 
@@ -435,11 +479,18 @@ def lock_online():
 @lau.route('/online/checklock', methods=['POST'])
 def check_lock():
     '''
-        Check whether the user is booked this service
+        æ£€æŸ¥ç”¨æˆ·é€‰å®šçš„æœåŠ¡æ˜¯å¦å·²è¢«é¢„è®¢
+
+        Args:
+            user: ç™»é™†çš„ç”¨æˆ·å
+            module_path: å‰ç«¯ç½‘é¡µé€‰ä¸­çš„æœåŠ¡
 
         Returns:
-            0: Says it has a reservation
-            1: Said without reservation
+            0: è¡¨ç¤ºå·²ç»é¢„è®¢
+            1: è¡¨ç¤ºæœªé¢„è®¢
+
+        Raises:
+            Null
     '''
     check_user = request.form.get('user', 'None')
     check_server = request.form.get('module_path', 'None')

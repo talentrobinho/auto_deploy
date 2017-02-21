@@ -9,8 +9,8 @@ PASSWORD = 'default'
 '''
     redis configure
 '''
-CACHE_TYPE = "redis"
-CACHE_REDIS_HOST = "127.0.0.1"
-CACHE_REDIS_PORT = "6379"
-CACHE_REDIS_DB = ""
-CACHE_REDIS_PASSWORD = ""
+cache_type = "redis"
+cache_redis_host = "10.129.149.152"
+cache_redis_port = "6379"
+cache_redis_db = ""
+cache_redis_password = ""

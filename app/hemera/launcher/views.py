@@ -5,34 +5,19 @@ import os
 import subprocess
 import yaml
 import json
-from flask import Blueprint, render_template, session, Flask
+from flask import Blueprint, render_template, session
 from flask import jsonify, abort, make_response, request
 from .util import *
 from .. import app
+<<<<<<< HEAD
 '''
     lizhansheng add
 '''
+=======
+from ..logger import *
+>>>>>>> upstream/master
 from .cgi.make_server_info import *
-from flask_cache import Cache
-from flask_wtf.csrf import CsrfProtect
-import redis
-'''
-    redis
-'''
-
-config = {
-  'CACHE_TYPE': app.config['CACHE_TYPE'],
-  'CACHE_REDIS_HOST': app.config['CACHE_REDIS_HOST'],
-  'CACHE_REDIS_PORT': app.config['CACHE_REDIS_PORT'],
-  'CACHE_REDIS_DB': app.config['CACHE_REDIS_DB'],
-  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
-}
-cache = Cache()
-cache = cache.init_app(app, config=config)
-
-'''
-    lizhansheng add end
-'''
+#from flask.ext.cache import Cache
 
 
 
@@ -44,9 +29,6 @@ japi = Serjenkins(app)
 sapi = SersaltAPI(app)
 #db = Mongodb(app)
 
-'''
-    lizhansheng 
-'''
 
 #@lau.route('/admini/getrole', methods=['POST'])
 def get_user_role(user):
@@ -73,13 +55,12 @@ def get_user_role(user):
 
 
 @lau.route('/online/index', methods=['GET'])
-#@cache(timeout = 300)
 def index_online():
-    """ 上线的主页面 """
     return render_template('online/index.html')
 
 @lau.route('/admini/index', methods=['GET'])
 def admini_index():
+<<<<<<< HEAD
     """ 权限管理的主页面 """
     user = request.cookies.get('_adtech_user') 
     user_role = get_user_role(user)
@@ -88,14 +69,13 @@ def admini_index():
     else:
         page = 'admini/index.html'
     return render_template(page)
+=======
+    return render_template('admini/index.html')
+>>>>>>> upstream/master
 
-'''
-    lizhansheng  end
-'''
 
 @lau.route('/backup/back', methods=['POST'])
 def backup_back():
-    """ 用于页面备份按钮调用 """
     data = request.form.get("module_path", "None")
     tgt = data + '*'
     param = {
@@ -108,17 +88,25 @@ def backup_back():
     if param['tgt'] == '*':
         rv = 'PAEAM: tgt is *.'
     else:
+<<<<<<< HEAD
         #r = sapi.salt_cmd(param)
         #result = yaml.load(r.text)['return']
         #for key,value in result[0].iteritems():
         #    data = {'message':str({key:value})}
         #    #sse.publish(data, type='backup_output', channel='backup')    # Ö´ÐÐÐÅÏ¢Êä³ö
+=======
+        r = sapi.salt_cmd(param)
+        result = yaml.load(r.text)['return']
+        for key,value in result[0].iteritems():
+            data = {'message':str({key:value})}
+            #sse.publish(data, type='backup_output', channel='backup')    # ִ????Ϣ????
+        logger.info("backup %s OK." % data)
+>>>>>>> upstream/master
         rv = 0
     return jsonify({'result':rv})
 
 @lau.route('/deploy/build', methods=['POST'])
 def deploy_build():
-    """ jenkins job 远程构建，用于页面触发job构建按钮调用 """
     data = request.form.get("module_path", "None")
     job = data
     try:
@@ -148,13 +136,12 @@ def deploy_build():
 
 @lau.route('/deploy/launch', methods=['POST'])
 def deploy_launch():
-    """ salt 文件分发部署，用于页面触发上线按钮调用 """
     data = request.form.get("module_path", "None")
     print "--------****************---------"
     print data
     tgt = data + '*'
     arg = None
-    #TODO arg = session['module_path']    # ÓÐÃ»ÓÐÂ·±êA
+    #TODO arg = session['module_path']    # ??û??·??A
     param = {
             'client':'local',
             'tgt':tgt,
@@ -171,7 +158,6 @@ def deploy_launch():
 
 @lau.route('/rollback/roll', methods=['POST'])
 def rollback_roll():
-    """ 用于页面回滚按钮调用 """
     data = request.form.get("module_path", "None")
     tgt = data + '*'
     param = {
@@ -188,14 +174,19 @@ def rollback_roll():
         result = yaml.load(r.text)['return']
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
+<<<<<<< HEAD
             #sse.publish(data, type='rollback_output', channel='rollback')
         rv = 'rollback ok'
+=======
+            #sse.publish(data, type='backup_output', channel='backup')    # ִ????Ϣ????
+        logger.info("backup %s OK." % data)
+        rv = 0
+>>>>>>> upstream/master
     return jsonify({'result':rv})
 
 
 @lau.route('/log', methods=['GET'])
 def log():
-    """ 日志记录及审计 """
     t_list = []
     module = session['module_path']
     info = db.build_info.find({"Name" : module})
@@ -275,26 +266,29 @@ def ip():
 
 
 
-'''
-    ##########################################################################
-                            lizhansheng add
-    ##########################################################################
-'''
-csrf = CsrfProtect()
-@csrf.exempt
+
+#cache = Cache()
+#config = {
+#  'CACHE_TYPE': app.config['CACHE_TYPE'],
+#  'CACHE_REDIS_HOST': app.config['CACHE_REDIS_HOST'],
+#  'CACHE_REDIS_PORT': app.config['CACHE_REDIS_PORT'],
+#  'CACHE_REDIS_DB': app.config['CACHE_REDIS_DB'],
+#  'CACHE_REDIS_PASSWORD': app.config['CACHE_REDIS_PASSWORD']
+#}
+
+#@csrf_exempt
 @lau.route('/tree/getsidebar', methods=['GET'])
 def sidebar_content():
-    '''
-        生成服务树形列表
-        Returns：
-            返回树形列表json数据
-    '''
     root=[]
     tmp_root=[]
     fa=[]
     tmp={}
     deal_list=[]
     sidebar_list=get_service_info()
+<<<<<<< HEAD
+=======
+    ##logger.info( type(sidebar_list)
+>>>>>>> upstream/master
     for line in sidebar_list:
         if line:
             line_tmp = line.strip('/').split('/')
@@ -303,54 +297,26 @@ def sidebar_content():
                 continue
             deal_list.append(line_list)
             tmp_root = Make_Tree_Json(tmp_root, line_list)
+    ##return HttpResponse(json.dumps(tmp_root), content_type='application/json')
     return jsonify(tmp_root)
 
+################################################################
+###         make select of route and ring json data          ###
+################################################################
 @lau.route('/tree/getrr', methods=['GET'])
 def rr_list():
-    '''
-        生成路和环下拉列表的json数据
-
-        Args:
-            Null
-        Returns:
-            返回数据格式如下：
-                [
-                  {
-                    "children": [
-                      {
-                        "children": [
-                          "ring0", 
-                          "ring1"
-                        ], 
-                        "content": "A"
-                      }, 
-                      {
-                        "children": [
-                          "ring0", 
-                          "ring1"
-                        ], 
-                        "content": "B"
-                      }]
-                  }
-                ]
-        Raises:
-            Null
-    '''
     service_info=get_service_info()
     rr_info = route_map_ring(service_info)
+    #return HttpResponse(json.dumps(rr_info), content_type='application/json')
     return jsonify(rr_info)
 
 @lau.route('/api/getip', methods=['GET'])
 def get_ip():
-    """
-        从凯撒接口获取用户选中的服务的IP列表
-        Returns:
-            返回用户选中服务的IP列表json数据，格式如下：
-            {'ip': '1.1.1.1 2.2.2.2'}
-    """
     tmp_dict = {}
     if request.method == "GET":
+        #server = request.GET['server']
         server = request.args.get('server')
+<<<<<<< HEAD
     return jsonify(get_service_ip(server))
 
 class RedisOp(object):
@@ -632,4 +598,14 @@ def get_privileges():
                             lizhansheng add end
     ##########################################################################
 '''
+=======
+    #logger.info( server
+    #tmp_dict['ip'] = get_service_ip(server)
+    #logger.info( tmp_dict
+    #return HttpResponse(json.dumps(get_service_ip(server)), content_type='application/json')
+    return jsonify(get_service_ip(server))
 
+
+>>>>>>> upstream/master
+
+'''你好'''

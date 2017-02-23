@@ -9,6 +9,7 @@ SALTAPI_URL = 'http://10.142.83.181:8000/'
 SALTAPI_USERNAME = 'saltapi'
 SALTAPI__PASSWD = 'salt'
 REDIS_URL = 'redis://localhost'
+<<<<<<< HEAD
 
 '''
     redis cache configure
@@ -32,3 +33,5 @@ PRIVILEGES_REDIS_DB = 1
     super administrator list
 '''
 ADMIN_LIST = "lizhansheng songwanbo"
+=======
+>>>>>>> upstream/master

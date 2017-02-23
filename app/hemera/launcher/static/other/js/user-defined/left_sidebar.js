@@ -6,7 +6,7 @@ document.scripts[0].src="userInfo.js"
 /*****************************
         获取树节点信息
 ******************************/
-function get_selected_treeInfo(info, joinstr="_")
+function get_selected_treeInfo(info, join_str='_')
 {
 
     //获取所选树节点信息
@@ -26,7 +26,7 @@ function get_selected_treeInfo(info, joinstr="_")
         var root = $('#leftbar').tree('getParent', node.target);
         while(root)
         {   
-            tr = root.text + joinstr + tr; 
+            tr = root.text + join_str + tr; 
             node = root;
             root = $('#leftbar').tree('getParent', node.target);
         }
@@ -197,23 +197,20 @@ $(document).ready(function(){
 
 
             /*** 检查是否在上线状态，开启构建、分发按钮 ***/
-            //alert(tr)
-            $.post("/launcher/online/checklock",{"module_path":tr,"user":cookie_val}, function(json_data){
-                        if(json_data['result']==0)
+            /*
+            $.getJSON("/op_online/",{"service":tr,"user":cookie_val}, function(json_data){
+                        if(json_data[0]['status']=='is_online')
                         {
-                            $("#build_button").removeAttr('disabled')
-                            $("#deploy_button").removeAttr('disabled')
-                            $("#backup_button").removeAttr('disabled')
-                            $("#rollback_button").removeAttr('disabled')
+                            $("#button_build").removeAttr('disabled')
+                            $("#button_deploy").removeAttr('disabled')
                         }
                         else
                         {
-                            $("#build_button").attr('disabled',true)
-                            $("#deploy_button").attr('disabled',true)
-                            $("#backup_button").attr('disabled',true)
-                            $("#rollback_button").attr('disabled',true)
+                            $("#button_build").attr('disabled',true)
+                            $("#button_deploy").attr('disabled',true)
                         }
             });
+            */
         }
 
         });
@@ -320,16 +317,7 @@ function build()
     //var page_info = get_page_info(is_online="true")
     var form_info = check_form(is_online="true")
     $.post("/launcher/deploy/build", form_info, function(json_data){
-                //alert(json_data[0]['result'])
-                status_code = json_data['result']
-                if(status_code == 0)
-                {
-                    alert("Build successful!")    
-                }
-                else
-                {
-                    alert("Build failed!")    
-                }
+        alert(json_data[0]['status'])
         },
         "json");
     show_build_modal('false')
@@ -352,23 +340,16 @@ function deploy()
     var build_info = JSON.parse(build_val)
     for(var key in build_info)
     {
+        alert(build_info[key])
+        alert(form_info[key])
         //if(build_info[key] != page_info[key])
         if(build_info[key] != form_info[key])
         {
-            alert("构建与上线信息不符, 差异如下：\n构建的Server为: "+build_info[key]+"\n发布的Server为: "+form_info[key])
+            alert("构建与上线信息不符, 差异如下：\n构建的"+key+"为: "+build_info[key]+"\n发布的"+key+"为: "+form_info[key])
         }
     }
-    $.post("/launcher/deploy/launch", form_info, function(json_data){
-                //alert(json_data[0]['result'])
-                status_code = json_data['result']
-                if(status_code == 0)
-                {
-                    alert("Deploy successful!")    
-                }
-                else
-                {
-                    alert("Deploy failed!")    
-                }
+    $.post("/deploy/launch", form_info, function(json_data){
+                alert(json_data[0]['status'])
         },
         "json");
     //show_deploy_modal('false')
@@ -380,33 +361,10 @@ function deploy()
 *********************************************************************************************************************/
 function backup()
 {
-    /*
     var page_info = get_page_info()
     // 将js对象转换为json格式的字符串
     var backup_value = JSON.stringify(page_info)
     $("#backup_button").attr("value", backup_value)
-    */
-
-
-    var form_info = check_form(is_online="true")
-    $.post("/launcher/backup/back", form_info, function(json_data){
-                //alert(json_data[0]['result'])
-                //alert(json_data['result'])
-                status_code = json_data['result']
-                if(status_code == 0)
-                {
-                    alert("Backup successful!")    
-                }
-                else if (status_code == 1)
-                {
-                    alert("Parameter error!")    
-                }
-                else
-                {
-                    alert("Backup failed!")    
-                }
-        },
-        "json");
 }
 
 /*********************************************************************************************************************
@@ -414,26 +372,10 @@ function backup()
 *********************************************************************************************************************/
 function rollback()
 {
-    /*
     var page_info = get_page_info()
     // 将js对象转换为json格式的字符串
     var rollback_value = JSON.stringify(page_info)
     $("#rollback_button").attr("value", rollback_value)
-    */
-
-    var form_info = check_form(is_online="true")
-    $.post("/launcher/rollback/roll", form_info, function(json_data){
-                status_code = json_data['result']
-                if(status_code == 0)
-                {
-                    alert("Rollback successful!")    
-                }
-                else
-                {
-                    alert("Rollback failed!")    
-                }
-        },
-        "json");
 }
 
 /*********************************************************************************************************************
@@ -441,7 +383,7 @@ function rollback()
 *********************************************************************************************************************/
 function show_input()
 {
-    if($("#backup_data").is(":checked"))
+    if($("#data").is(":checked"))
     {
         $("#inputFile").removeAttr("style")    
     }
@@ -487,56 +429,10 @@ function show_build_modal(open='true')
 ///     }
 /// }
 /// /// 
-
-
-/*********************************************************************************************************************
-*                                               锁定上线
-*********************************************************************************************************************/
-function lock_online()
-{
-    tr = get_selected_treeInfo('tree')
-    tr = check_form()
-    if(tr == false)
-    {
-        return false    
-    }
-    //alert("lock: "+tr['module_path'])
-    $.post("/launcher/online/lock", {"module_path":tr['module_path']}, function(json_data){
-        //$("#online_modal").modal('hide')
-                status_code = json_data['result']
-                if(status_code == 0)
-                {
-                    alert("lock successful!")    
-                    $("#build_button").removeAttr('disabled')
-                    $("#deploy_button").removeAttr('disabled')
-                    $("#backup_button").removeAttr('disabled')
-                    $("#rollback_button").removeAttr('disabled')
-                }
-                else if(status_code == 1)
-                {
-                    alert("You always book this server!")    
-                    $("#build_button").removeAttr('disabled')
-                    $("#deploy_button").removeAttr('disabled')
-                    $("#backup_button").removeAttr('disabled')
-                    $("#rollback_button").removeAttr('disabled')
-                }
-                else if(status_code == 2)
-                {
-                    status_info = json_data['result_info']
-                    alert(status_info+" is online!!!")    
-                }
-                else
-                {
-                    alert(status_code)
-                    alert("lock failed!")    
-                }
-    },
-    'json');
-}
-
-
-
-
+//
+//
+//
+//
 /// /*********************************************************************************************************************
 ///                                                to_online 
 /// *********************************************************************************************************************/
@@ -563,5 +459,22 @@ function lock_online()
 ///                 }
 ///         });
 /// }
-
+/// /*********************************************************************************************************************
+///                                                Lock online 
+/// *********************************************************************************************************************/
+/// function sure_online()
+/// {
+///     tr = get_selected_treeInfo('tree')
+///     if(tr == false)
+///     {
+///         return false    
+///     }
+///     $.getJSON("/lock_online/", {"service":tr}, function(json_data){
+///         $("#online_modal").modal('hide')
+///     });
+///     $("#button_build").removeAttr('disabled')
+///     $("#button_deploy").removeAttr('disabled')
+///     
+/// }
+/// 
 

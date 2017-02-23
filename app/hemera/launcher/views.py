@@ -9,14 +9,12 @@ from flask import Blueprint, render_template, session
 from flask import jsonify, abort, make_response, request
 from .util import *
 from .. import app
-<<<<<<< HEAD
 '''
     lizhansheng add
 '''
-=======
 from ..logger import *
->>>>>>> upstream/master
 from .cgi.make_server_info import *
+import redis
 #from flask.ext.cache import Cache
 
 
@@ -60,7 +58,6 @@ def index_online():
 
 @lau.route('/admini/index', methods=['GET'])
 def admini_index():
-<<<<<<< HEAD
     """ 权限管理的主页面 """
     user = request.cookies.get('_adtech_user') 
     user_role = get_user_role(user)
@@ -69,9 +66,6 @@ def admini_index():
     else:
         page = 'admini/index.html'
     return render_template(page)
-=======
-    return render_template('admini/index.html')
->>>>>>> upstream/master
 
 
 @lau.route('/backup/back', methods=['POST'])
@@ -88,20 +82,17 @@ def backup_back():
     if param['tgt'] == '*':
         rv = 'PAEAM: tgt is *.'
     else:
-<<<<<<< HEAD
         #r = sapi.salt_cmd(param)
         #result = yaml.load(r.text)['return']
         #for key,value in result[0].iteritems():
         #    data = {'message':str({key:value})}
         #    #sse.publish(data, type='backup_output', channel='backup')    # Ö´ÐÐÐÅÏ¢Êä³ö
-=======
         r = sapi.salt_cmd(param)
         result = yaml.load(r.text)['return']
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
             #sse.publish(data, type='backup_output', channel='backup')    # ִ????Ϣ????
         logger.info("backup %s OK." % data)
->>>>>>> upstream/master
         rv = 0
     return jsonify({'result':rv})
 
@@ -174,14 +165,11 @@ def rollback_roll():
         result = yaml.load(r.text)['return']
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
-<<<<<<< HEAD
             #sse.publish(data, type='rollback_output', channel='rollback')
         rv = 'rollback ok'
-=======
             #sse.publish(data, type='backup_output', channel='backup')    # ִ????Ϣ????
         logger.info("backup %s OK." % data)
         rv = 0
->>>>>>> upstream/master
     return jsonify({'result':rv})
 
 
@@ -285,10 +273,6 @@ def sidebar_content():
     tmp={}
     deal_list=[]
     sidebar_list=get_service_info()
-<<<<<<< HEAD
-=======
-    ##logger.info( type(sidebar_list)
->>>>>>> upstream/master
     for line in sidebar_list:
         if line:
             line_tmp = line.strip('/').split('/')
@@ -316,7 +300,6 @@ def get_ip():
     if request.method == "GET":
         #server = request.GET['server']
         server = request.args.get('server')
-<<<<<<< HEAD
     return jsonify(get_service_ip(server))
 
 class RedisOp(object):
@@ -598,14 +581,3 @@ def get_privileges():
                             lizhansheng add end
     ##########################################################################
 '''
-=======
-    #logger.info( server
-    #tmp_dict['ip'] = get_service_ip(server)
-    #logger.info( tmp_dict
-    #return HttpResponse(json.dumps(get_service_ip(server)), content_type='application/json')
-    return jsonify(get_service_ip(server))
-
-
->>>>>>> upstream/master
-
-'''你好'''

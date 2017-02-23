@@ -11,11 +11,24 @@ SALTAPI__PASSWD = 'salt'
 REDIS_URL = 'redis://localhost'
 
 '''
-    redis configure
+    redis cache configure
 '''
 CACHE_TYPE = "redis"
 CACHE_REDIS_HOST = "10.129.149.152"
 CACHE_REDIS_PORT = "6379"
-CACHE_REDIS_DB = ""
+CACHE_REDIS_DB = 0
 CACHE_REDIS_PASSWORD = ""
 CACHE_REDIS_TIMEOUT = 60
+
+'''
+    redis privileges database configure
+'''
+PRIVILEGES_TYPE = "redis"
+PRIVILEGES_REDIS_HOST = "10.129.149.152"
+PRIVILEGES_REDIS_PORT = "6379"
+PRIVILEGES_REDIS_DB = 1
+
+'''
+    super administrator list
+'''
+ADMIN_LIST = "lizhansheng songwanbo"

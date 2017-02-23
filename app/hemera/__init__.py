@@ -11,6 +11,8 @@ app.config.from_pyfile('config.py')
 
 #from .admin.views import adm
 #app.register_blueprint(adm, url_prefix='/admin')
+from .console.views import cns
+app.register_blueprint(cns, url_prefix='/console')
 from .launcher.views import lau
 app.register_blueprint(lau, url_prefix='/launcher')
 #from .launcher.views import sse

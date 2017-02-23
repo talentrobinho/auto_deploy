@@ -20,6 +20,7 @@ from .cgi.make_server_info import *
 '''
 
 logger = Logger(file="/search/odin/flasky/log.out",name='lau').getlog()
+logger.info("hello info")
 
 #from flask_sse import sse
 
@@ -61,7 +62,7 @@ def backup_back():
             'expr_form':'glob'
             }
     if param['tgt'] == 'None*':
-        logger.error("request get module_path error.")
+        print "Log: request get module_path error."
         rv = 1
     else:
         r = sapi.salt_cmd(param)
@@ -69,7 +70,7 @@ def backup_back():
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
             #sse.publish(data, type='backup_output', channel='backup')    # 执行信息输出
-        logger.info("backup %s OK." % data)
+        print "Log: backup %s OK." % data
         rv = 0
     return jsonify({'result':rv})
 
@@ -81,14 +82,14 @@ def deploy_build():
     try:
         next_build_number = japi.get_job_info(job)['nextBuildNumber']
     except:
-        logger.warn("job is not existed.")
+        print "Log: job is not existed."
         rv = 1
     else:
         session['build_number'] = next_build_number
         try:
             japi.build_job(job)
         except:
-            logger.error("job builded error.")
+            print "Log: job builded error."
             rv = 1
         else:
             flag = True
@@ -101,7 +102,7 @@ def deploy_build():
                 else:
                     flag = japi.get_build_info(job, next_build_number)['building']
             result = japi.get_build_info(job, next_build_number)
-            logger.info("job has been builded and result is %s" % result['result'])
+            print "Log: job has been builded and result is %s" % result['result']
             if result['result'] == 'SUCCESS':
                 rv = 0
             else:
@@ -124,12 +125,12 @@ def deploy_launch():
             #TODO 'arg':arg
             }
     if param['tgt'] == 'None*':
-        logger.error("request get module_path error.")
+        print "Log: request get module_path error."
         rv = 1
     else:
         r = sapi.salt_cmd(param)
         result = yaml.load(r.text)['return']
-        logger.info("launch %s OK." % data)
+        print "Log: launch %s OK." % data
         rv = 0
     return jsonify({'result':rv})
 
@@ -148,7 +149,7 @@ def rollback_roll():
             'expr_form':'glob'
             }
     if param['tgt'] == 'None*':
-        logger.error("request get module_path error.")
+        print "Log: request get module_path error."
         rv = 1
     else:
         r = sapi.salt_cmd(param)
@@ -156,7 +157,7 @@ def rollback_roll():
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
             #sse.publish(data, type='backup_output', channel='backup')    # 执行信息输出
-        logger.info("backup %s OK." % data)
+        print "Log: backup %s OK." % data
         rv = 0
     return jsonify({'result':rv})
 
@@ -269,7 +270,7 @@ def sidebar_content():
     tmp={}
     deal_list=[]
     sidebar_list=get_service_info()
-    ##logger.info( type(sidebar_list)
+    ##print type(sidebar_list)
     for line in sidebar_list:
         if line:
             line_tmp = line.strip('/').split('/')
@@ -304,9 +305,9 @@ def get_ip():
     if request.method == "GET":
         #server = request.GET['server']
         server = request.args.get('server')
-    #logger.info( server
+    #print server
     #tmp_dict['ip'] = get_service_ip(server)
-    #logger.info( tmp_dict
+    #print tmp_dict
     #return HttpResponse(json.dumps(get_service_ip(server)), content_type='application/json')
     return jsonify(get_service_ip(server))
 

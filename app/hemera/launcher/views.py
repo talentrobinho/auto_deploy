@@ -9,6 +9,7 @@ from flask import Blueprint, render_template, session, Flask
 from flask import jsonify, abort, make_response, request
 from .util import *
 from .. import app
+from ..logger import *
 '''
     lizhansheng add
 '''
@@ -34,8 +35,7 @@ cache = cache.init_app(app, config=config)
     lizhansheng add end
 '''
 
-
-
+logger = Logger(file="/search/odin/flasky/log.out",name='lau').getlog()
 
 #from flask_sse import sse
 
@@ -101,18 +101,30 @@ def backup_back():
     param = {
             'client':'local',
             'tgt':tgt,
+            #TODO 'fun':'cmd.script',
             'fun':'network.ipaddrs',
+            #TODO 'arg':'salt://scripts/backup.sh',
             'arg':'eth0',
             'expr_form':'glob'
             }
-    if param['tgt'] == '*':
-        rv = 'PAEAM: tgt is *.'
+    if param['tgt'] == 'None*':
+        logger.error("request get module_path error.")
+        rv = 1
     else:
+<<<<<<< HEAD
+        r = sapi.salt_cmd(param)
+        result = yaml.load(r.text)['return']
+        for key,value in result[0].iteritems():
+            data = {'message':str({key:value})}
+            #sse.publish(data, type='backup_output', channel='backup')    # ִ����Ϣ���
+        logger.info("backup %s OK." % data)
+=======
         #r = sapi.salt_cmd(param)
         #result = yaml.load(r.text)['return']
         #for key,value in result[0].iteritems():
         #    data = {'message':str({key:value})}
         #    #sse.publish(data, type='backup_output', channel='backup')    # Ö´ÐÐÐÅÏ¢Êä³ö
+>>>>>>> e5c6a0587ca65075e0149b993b70be12717ed99d
         rv = 0
     return jsonify({'result':rv})
 
@@ -124,13 +136,15 @@ def deploy_build():
     try:
         next_build_number = japi.get_job_info(job)['nextBuildNumber']
     except:
-        rv = "ERROR: job is not existed."
+        logger.warn("job is not existed.")
+        rv = 1
     else:
         session['build_number'] = next_build_number
         try:
             japi.build_job(job)
         except:
-            rv = "ERROR: job builded error."
+            logger.error("job builded error.")
+            rv = 1
         else:
             flag = True
             while flag:
@@ -142,16 +156,18 @@ def deploy_build():
                 else:
                     flag = japi.get_build_info(job, next_build_number)['building']
             result = japi.get_build_info(job, next_build_number)
-            rv = result['result']
+            logger.info("job has been builded and result is %s" % result['result'])
+            if result['result'] == 'SUCCESS':
+                rv = 0
+            else:
+                rv = 1
     finally:
-        return jsonify(rv)
+        return jsonify({'result':rv})
 
 @lau.route('/deploy/launch', methods=['POST'])
 def deploy_launch():
     """ salt 文件分发部署，用于页面触发上线按钮调用 """
     data = request.form.get("module_path", "None")
-    print "--------****************---------"
-    print data
     tgt = data + '*'
     arg = None
     #TODO arg = session['module_path']    # ÓÐÃ»ÓÐÂ·±êA
@@ -162,12 +178,15 @@ def deploy_launch():
             'fun':'test.ping',
             #TODO 'arg':arg
             }
-    if param['tgt'] == '*':
-        rv = 'PAEAM: tgt is *.'
+    if param['tgt'] == 'None*':
+        logger.error("request get module_path error.")
+        rv = 1
     else:
         r = sapi.salt_cmd(param)
-        rv = yaml.load(r.text)['return']
-    return jsonify(rv)
+        result = yaml.load(r.text)['return']
+        logger.info("launch %s OK." % data)
+        rv = 0
+    return jsonify({'result':rv})
 
 @lau.route('/rollback/roll', methods=['POST'])
 def rollback_roll():
@@ -177,21 +196,24 @@ def rollback_roll():
     param = {
             'client':'local',
             'tgt':tgt,
+            #TODO 'fun':'cmd.script',
             'fun':'network.ipaddrs',
+            #TODO 'arg':'salt://scripts/rollback.sh',
             'arg':'eth0',
             'expr_form':'glob'
             }
-    if param['tgt'] == '*':
-        rv = 'PAEAM: tgt is *.'
+    if param['tgt'] == 'None*':
+        logger.error("request get module_path error.")
+        rv = 1
     else:
         r = sapi.salt_cmd(param)
         result = yaml.load(r.text)['return']
         for key,value in result[0].iteritems():
             data = {'message':str({key:value})}
-            #sse.publish(data, type='rollback_output', channel='rollback')
-        rv = 'rollback ok'
+            #sse.publish(data, type='backup_output', channel='backup')    # ִ����Ϣ���
+        logger.info("backup %s OK." % data)
+        rv = 0
     return jsonify({'result':rv})
-
 
 @lau.route('/log', methods=['GET'])
 def log():
@@ -295,6 +317,10 @@ def sidebar_content():
     tmp={}
     deal_list=[]
     sidebar_list=get_service_info()
+<<<<<<< HEAD
+    ##logger.info( type(sidebar_list)
+=======
+>>>>>>> e5c6a0587ca65075e0149b993b70be12717ed99d
     for line in sidebar_list:
         if line:
             line_tmp = line.strip('/').split('/')
@@ -351,6 +377,13 @@ def get_ip():
     tmp_dict = {}
     if request.method == "GET":
         server = request.args.get('server')
+<<<<<<< HEAD
+    #logger.info( server
+    #tmp_dict['ip'] = get_service_ip(server)
+    #logger.info( tmp_dict
+    #return HttpResponse(json.dumps(get_service_ip(server)), content_type='application/json')
+=======
+>>>>>>> e5c6a0587ca65075e0149b993b70be12717ed99d
     return jsonify(get_service_ip(server))
 
 class RedisOp(object):

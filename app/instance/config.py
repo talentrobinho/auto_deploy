@@ -9,13 +9,3 @@ SALTAPI_URL = 'http://10.142.83.181:8000/'
 SALTAPI_USERNAME = 'saltapi'
 SALTAPI__PASSWD = 'salt'
 REDIS_URL = 'redis://localhost'
-
-'''
-    redis configure
-'''
-CACHE_TYPE = "redis"
-CACHE_REDIS_HOST = "10.129.149.152"
-CACHE_REDIS_PORT = "6379"
-CACHE_REDIS_DB = ""
-CACHE_REDIS_PASSWORD = ""
-CACHE_REDIS_TIMEOUT = 60

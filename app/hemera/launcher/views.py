@@ -13,8 +13,8 @@ from ..logger import *
 from .cgi.make_server_info import *
 #from flask.ext.cache import Cache
 
-logger = Logger(file="/search/odin/flasky/log.out",name='lau').getlog()
-
+logger = Logger(file="/search/odin/flasky/app/hemera/console/lau.out",name='lau').getlog()
+logger.info("log begin...")
 #from flask_sse import sse
 
 lau = Blueprint('lau', __name__, template_folder='templates', static_folder='static')
@@ -242,7 +242,6 @@ def sidebar_content():
     tmp={}
     deal_list=[]
     sidebar_list=get_service_info()
-    ##logger.info( type(sidebar_list)
     for line in sidebar_list:
         if line:
             line_tmp = line.strip('/').split('/')
@@ -270,12 +269,7 @@ def get_ip():
     if request.method == "GET":
         #server = request.GET['server']
         server = request.args.get('server')
-    #logger.info( server
-    #tmp_dict['ip'] = get_service_ip(server)
-    #logger.info( tmp_dict
-    #return HttpResponse(json.dumps(get_service_ip(server)), content_type='application/json')
     return jsonify(get_service_ip(server))
 
 
 
-'''你好'''

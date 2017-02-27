@@ -21,4 +21,6 @@ def lau_out():
                 ws.send(message)
             else:
                 abort(404)
-    return "connected."
+        return "Connected."
+    else:
+        return "Unconnected."

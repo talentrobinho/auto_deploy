@@ -1,64 +1,91 @@
+/*********************************************
+ *     引入获取cookie用户信息js文件
+ *  *********************************************/
+document.scripts[0].src="userInfo.js"
+
+
 /********************************
         添加上线权限
 ********************************/
 function get_save_privilege()
 {
+        /*
+         *   从后端redis数据库中获取用户的权限列表，并在前端显示
+         */
         var user=$("#userSelect").find("option:selected").text()
         //$.post("/show_saved_privilege/", {'user': user},function(json_data){
-        $.post("/launcher/admini/userPrivileges/", {'user': user},function(json_data){
-                for(var i=0;i<json_data.length;i++)
+        $.post("/launcher/admini/getprivilege", {'user': user},function(json_data){
+                var ss = json_data['own']
+                var unss = json_data['out']
+                unselected_server = unss.split(",")
+                if(ss == 'None')
                 {
-                    var ss = json_data[i]['yes']
-                    var unss = json_data[i]['no']
-                    unselected_server = unss.split(",")
-                    if(ss != 'None')
-                    {
-                        selected_server = ss.split(",")
-                    }
-                    else
-                    {
-                        selected_server=[]    
-                    }
-
-                    $("#own_list").empty()
-                    $("#out_list").empty()
-                    $(selected_server).each(function (index, ser){
-                        $("#own_list").append("<option value='Value'>"+ser+"</option>")
-                        });
-                    $(unselected_server).each(function (index, unser){
-                        $("#out_list").append("<option value='Value'>"+unser+"</option>")
-                        });
-                }
-        });
-    
-}
-function set_privilege()
-{
-        var server_info=""
-        var tmp_add=""
-        var is_privilege
-                    
-        $("#own_list").empty()
-        //$.getJSON("/getserverlist/", function(json_data){
-        $.getJSON("/launcher/admini/getserverlist/", function(json_data){
-            for(var i=0;i<json_data.length;i++)
-            {
-                server_info=json_data[i]['server']
-                if(server_info == 'NOPERMISSION')
-                {
-                    is_privilege='NO'
+                    selected_server=[]    
                 }
                 else
                 {
-                    $("#out_list").append("<option value='Value'>"+server_info+"</option>")
+                    selected_server = ss.split(",")
                 }
-            }
-            if(is_privilege == 'NO')
+
+                $("#own_list").empty()
+                $("#out_list").empty()
+                $(selected_server).each(function (index, ser){
+                    $("#own_list").append("<option value='Value'>"+ser+"</option>")
+                    });
+                $(unselected_server).each(function (index, unser){
+                    $("#out_list").append("<option value='Value'>"+unser+"</option>")
+                    });
+        });
+    
+}
+function give_privilege()
+{
+                    
+        //$("#own_list").empty()
+        //$("#userSelect").find("option[text="+cookie_val+"]").attr("selected",true); 
+        //alert(cookie_val)
+        $.post("/launcher/admini/getprivilege", {'user': cookie_val}, function(json_data){
+            alert(json_data)
+            var selected_server
+            var unselected_server
+            var own_server
+            var out_server
+            var user_role
+
+            own_server = json_data['own']
+            out_server = json_data['out']
+            user_role = json_data['role']
+            alert(own_server)
+            alert(out_server)
+            alert(user_role)
+            /*
+            if(user_role != 1)
             {
                 alert('YOU ARE NOPERMISSION')
                 return false
             }
-            $('#set_privilege').modal('show')
+            else
+            {
+                unselected_server = out_server.split(",")
+                if(own_server == "None")
+                {
+                    selected_server = []
+                }
+                else
+                {
+                    selected_server = own_server.split(",")
+                }
+                //$("#out_list").append("<option value='Value'>"+server_info+"</option>")
+                $("#own_list").empty()
+                $("#out_list").empty()
+                $(selected_server).each(function (index, ser){
+                    $("#own_list").append("<option value='Value'>"+ser+"</option>")
+                    });
+                $(unselected_server).each(function (index, unser){
+                    $("#out_list").append("<option value='Value'>"+unser+"</option>")
+                    });
+            }*/
+            //$('#set_privilege').modal('show')
         });
 
         // 选择赋予权限的server，在已选择列表中显示，并在待选列表中删除

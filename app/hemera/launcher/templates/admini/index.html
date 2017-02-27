@@ -10,7 +10,7 @@
     <li class="active treeview">
   {% endblock %}
   {% block Administrator_OnlineSYS_Privileges_li %}
-    <li class="active"><a href="/launcher/admini/index"><i class="fa fa-circle-o"></i>OnlineSYS Privileges </a></li>
+    <li class="active" onclick="give_privilege()"><a href="/launcher/admini/index"><i class="fa fa-circle-o"></i>OnlineSYS Privileges </a></li>
   {% endblock %}
 
   {% block ContentWrapper%}
@@ -46,12 +46,6 @@
             <!-- /.box-header -->
             <div class="box-body box-profile">
                 <select multiple class="form-control" id="own_list" style="width: 100%;height: 100%" size="10">
-                    <option selected="selected">lizhansheng</option>
-                    <option>songwanbo</option>
-                    <option>xujinguo</option>
-                    <option>xujinguo</option>
-                    <option>xujinguo</option>
-                    <option>mengqingping</option>
                 </select>
             </div>
             <!-- /.box-body -->
@@ -75,11 +69,6 @@
             <!-- /.box-header -->
             <div class="box-body box-profile">
                 <select multiple class="form-control" id="out_list" style="width: 100%;height: 100%" size='10'>
-                    <option selected="selected">lizhansheng</option>
-                    <option>songwanbo</option>
-                    <option>xujinguo</option>
-                    <option>duyichen</option>
-                    <option>mengqingping</option>
                 </select>
             </div>
             <!-- /.box-body -->
@@ -101,7 +90,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body box-profile" id="userSelect">
-                <select class="form-control select2" style="width: 100%;">
+                <select id="userSelect" class="form-control select2" style="width: 100%;" onchange="get_save_privilege()">
                     <option selected="selected">lizhansheng</option>
                     <option>songwanbo</option>
                     <option>xujinguo</option>
@@ -137,5 +126,5 @@
 
   {% block UserJS %}
   <!-- User defind load js -->
-  <script src="/static/other/js/user-defined/admini.js"></script>
+  <script src="/launcher/static/other/js/user-defined/admini.js"></script>
   {% endblock %}

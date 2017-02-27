@@ -1,0 +1,62 @@
+  {% extends 'index.html' %}
+
+
+
+  {% block UserCSS %}
+  {% endblock %}
+
+
+  {% block Administrator_li %}
+    <li class="active treeview">
+  {% endblock %}
+  {% block Administrator_OnlineSYS_Privileges_li %}
+    <li class="active" onclick="give_privilege()"><a href="/launcher/admini/index"><i class="fa fa-circle-o"></i>OnlineSYS Privileges </a></li>
+  {% endblock %}
+
+  {% block ContentWrapper%}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        OnlineSYS Privileges
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Examples</a></li>
+        <li class="active">User profile</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <div class="row">
+        <div class="col-md-12">
+              <div class="alert alert-danger alert-dismissible">
+                <h3><i class="icon fa fa-ban"></i> Alert!</h3>
+                <b><h4>You don't have permission to access, please contact your administrator</h4></b>
+              </div>
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col-md-3 -->
+
+
+
+     </div>
+      <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+  {% endblock %}
+
+
+  {% block UserJS %}
+  <!-- User defind load js -->
+  <script src="/launcher/static/other/js/user-defined/admini.js"></script>
+  {% endblock %}
